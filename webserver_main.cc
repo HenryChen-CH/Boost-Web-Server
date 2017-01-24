@@ -10,5 +10,10 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     http_server server;
-    server.Init(string(argv[1]));
+
+    if (server.Init(string(argv[1]))) {
+        server.start();
+    };
+
+    return 0;
 }
