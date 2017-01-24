@@ -46,7 +46,7 @@ void http_server::accept() {
             return;
         }
         if (!ec) {
-            std::cout << "Accept a connection\n";
+            connection_manager_.start(std::make_shared<connection>(std::move(socket_), connection_manager_, request_handler_));
         }
         accept();
     });
@@ -54,4 +54,8 @@ void http_server::accept() {
 
 void http_server::start() {
     io_service_.run();
+}
+
+void http_server::stop() {
+    connection_manager_.stop_all();
 }

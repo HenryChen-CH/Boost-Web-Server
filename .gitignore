@@ -6,3 +6,4 @@ webserver
 *.dSYM
 nginx-configparser
 config
+*.out
