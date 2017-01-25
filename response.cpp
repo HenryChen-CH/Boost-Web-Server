@@ -16,7 +16,7 @@ const std::string crlf = "\r\n";
 std::vector<boost::asio::const_buffer> response::ToBuffer() {
     std::vector<boost::asio::const_buffer> buffers;
     buffers.push_back(boost::asio::buffer(to_buffer(status)));
-    for (int i = 0; i < headers.size(); i++) {
+    for (unsigned int i = 0; i < headers.size(); i++) {
         header& h = headers[i];
         buffers.push_back(boost::asio::buffer(h.name));
         buffers.push_back(boost::asio::buffer(name_value_separator));
@@ -32,7 +32,7 @@ std::vector<boost::asio::const_buffer> response::ToBuffer() {
 std::string response::ToString() {
     std::string result;
     result += to_string(status);
-    for (int i = 0; i < headers.size(); i++) {
+    for (unsigned int i = 0; i < headers.size(); i++) {
         header& h = headers[i];
         result += h.name;
         result += name_value_separator;
