@@ -15,9 +15,7 @@ const std::string crlf = "\r\n";
 
 std::vector<boost::asio::const_buffer> response::ToBuffer() {
     std::vector<boost::asio::const_buffer> buffers;
-    std::string status_line = to_string(status);
-    buffers.push_back(boost::asio::buffer(ok_));
-    std::cout << "Status: " << status_line << "\n";
+    buffers.push_back(boost::asio::buffer(to_buffer(status)));
     for (int i = 0; i < headers.size(); i++) {
         header& h = headers[i];
         buffers.push_back(boost::asio::buffer(h.name));
@@ -55,5 +53,14 @@ std::string response::to_string(reponse_status status) {
             return ok_;
         default:
             return bad_request_;
+    }
+}
+
+boost::asio::const_buffer response::to_buffer(reponse_status status) {
+    switch (status) {
+        case ok:
+            return boost::asio::buffer(ok_);
+        default:
+            return boost::asio::buffer(bad_request_);
     }
 }

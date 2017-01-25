@@ -25,6 +25,7 @@ public:
 
 private:
     std::string to_string(reponse_status status);
+    boost::asio::const_buffer to_buffer(reponse_status status);
 };
 
 #endif
