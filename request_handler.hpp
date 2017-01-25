@@ -5,6 +5,7 @@
 #include "response.hpp"
 #include <boost/asio.hpp>
 #include "request.hpp"
+#include <string>
 
 
 class request_handler{

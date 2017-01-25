@@ -13,14 +13,15 @@
 
 class connection_manager;
 
-class connection {
+class connection : public std::enable_shared_from_this<connection>{
 public:
-    connection(boost::asio::ip::tcp::socket socket, connection_manager& manager, request_handler& handler);
+    explicit connection(boost::asio::ip::tcp::socket socket, connection_manager& manager, request_handler& handler);
     void start();
     void stop();
 
 private:
     void read();
+    void write();
 
     boost::asio::ip::tcp::socket socket_;
     connection_manager& connection_manager_;
