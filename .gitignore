@@ -5,5 +5,4 @@ cmake-build-debug/
 webserver
 *.dSYM
 nginx-configparser
-config
 *.out
