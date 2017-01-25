@@ -23,6 +23,7 @@ private:
     boost::asio::io_service io_service_;
     boost::asio::ip::tcp::acceptor acceptor_;
     boost::asio::ip::tcp::socket socket_;
+    boost::asio::signal_set signals_;
 
     connection_manager connection_manager_;
     request_handler request_handler_;

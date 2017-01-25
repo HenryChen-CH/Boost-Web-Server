@@ -3,9 +3,11 @@
 http_server::http_server()
 : io_service_(),
   acceptor_(io_service_),
-  socket_(io_service_)
+  socket_(io_service_),
+  signals_(io_service_)
 {
-
+    signals_.add(SIGINT);
+    stop();
 }
 
 bool http_server::Init(const std::string& config_file)
@@ -57,5 +59,9 @@ void http_server::start() {
 }
 
 void http_server::stop() {
-    connection_manager_.stop_all();
+    signals_.async_wait([this](boost::system::error_code ec, int signo){
+        connection_manager_.stop_all();
+        std::cout << "Server Stop\n";
+        exit(0);
+    });
 }
