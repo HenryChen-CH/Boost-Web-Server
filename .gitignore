@@ -4,5 +4,4 @@ cmake-build-debug/
 .DS_Store
 webserver
 *.dSYM
-nginx-configparser
 *.out
