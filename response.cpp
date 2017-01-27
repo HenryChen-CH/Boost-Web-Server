@@ -6,7 +6,6 @@ const std::string ok_ =
 const std::string bad_request_ =
         "HTTP/1.1 400 Bad Request\r\n";
 
-
 response::response() {
 
 }
