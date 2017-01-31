@@ -1,0 +1,12 @@
+# Use Ubuntu 14.04
+dist: trusty
+sudo: required
+
+language: cpp
+
+addons:
+ apt:
+   packages:
+   - libboost-all-dev
+
+script: make test
