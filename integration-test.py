@@ -5,13 +5,6 @@ import requests, os
 port = 3000
 FNULL = open(os.devnull, 'w')
 
-call(['make', 'clean'])
-if  call(['make']) == 0:
-    print "compile successfully..."
-else:
-    print "something wrong with compile"
-    exit(1);
-
 server = Popen(['./webserver', 'config'], stdout=FNULL)
 headers = {'content-type': 'text/plain'}
 r = requests.get('http://localhost:3000', headers=headers)
