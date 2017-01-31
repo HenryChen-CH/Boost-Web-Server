@@ -8,3 +8,7 @@ compile: $(SOURCE_FILES)
 
 clean:
 	@rm -rf webserver *.dSYM *.o *.a
+
+test: compile
+	chmod a+x integration-test.py
+	./integration-test.py
