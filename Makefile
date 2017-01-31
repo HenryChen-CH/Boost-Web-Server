@@ -8,3 +8,6 @@ compile: $(SOURCE_FILES)
 
 clean:
 	@rm -rf webserver *.dSYM *.o *.a
+
+test:
+	./integration-test.py
