@@ -10,4 +10,5 @@ clean:
 	@rm -rf webserver *.dSYM *.o *.a
 
 test:
+	chmod a+x integration-test.py
 	./integration-test.py
