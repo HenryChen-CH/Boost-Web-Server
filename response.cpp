@@ -54,12 +54,3 @@ std::string response::to_string(reponse_status status) {
             return bad_request_;
     }
 }
-
-boost::asio::const_buffer response::to_buffer(reponse_status status) {
-    switch (status) {
-        case ok:
-            return boost::asio::buffer(ok_);
-        default:
-            return boost::asio::buffer(bad_request_);
-    }
-}
