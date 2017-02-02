@@ -6,6 +6,7 @@
 #include <boost/asio.hpp>
 #include "connection_manager.hpp"
 #include "request_handler.hpp"
+#include "gtest/gtest_prod.h"
 
 class http_server {
 public:
@@ -27,6 +28,8 @@ private:
 
     connection_manager connection_manager_;
     request_handler request_handler_;
+
+    FRIEND_TEST(http_server_test,porttest);
 };
 
 #endif
