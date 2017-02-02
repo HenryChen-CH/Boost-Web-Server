@@ -6,7 +6,7 @@
 #include <boost/asio.hpp>
 #include "connection_manager.hpp"
 #include "request_handler.hpp"
-#include "gtest/gtest_prod.h"
+#include "googletest/googletest/include/gtest/gtest_prod.h"
 
 class http_server {
 public:

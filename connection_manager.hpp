@@ -5,7 +5,7 @@
 #include <set>
 #include <memory>
 #include "connection.hpp"
-#include "gtest/gtest_prod.h"
+#include "googletest/googletest/include/gtest/gtest_prod.h"
 
 class connection_manager {
 public:
