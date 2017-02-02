@@ -6,7 +6,7 @@ GTEST_DIR = googletest/googletest
 
 all: compile
 
-compile: $(SOURCE_FILES)
+compile: $(SOURCE_FILES) gtest
 	@g++ $(SOURCE_FILES) $(FLAGS) -o webserver
 
 clean1:
@@ -19,36 +19,43 @@ integration-test: compile
 http_server_test: gtest
 	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc http_server_test.cpp libgtest.a $(TEST_FLAGS) -o http_server_test
 	./http_server_test
+	gcov -r http_server.cpp
 .PHONY: http_server_test
 
 request_handler_test: gtest
 	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc request_handler_test.cpp libgtest.a $(TEST_FLAGS) -o request_handler_test
 	./request_handler_test
+	gcov -r request_handler.cpp
 .PHONY: request_handler_test
 
 request_parser_test: gtest
 	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc request_parser_test.cpp libgtest.a $(TEST_FLAGS) -o request_parser_test
 	./request_parser_test
+	gcov -r request_parser.cpp
 .PHONY: request_parser_test
 
 request_test: gtest
 	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc request_test.cpp libgtest.a $(TEST_FLAGS) -o request_test
 	./request_test
+	gcov -r request.cpp
 .PHONY: request_test
 
 response_test: gtest
 	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc response_test.cpp libgtest.a $(TEST_FLAGS) -o response_test
 	./response_test
+	gcov -r response.cpp
 .PHONY: response_test
 
 connection_test: gtest
 	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc connection_test.cpp libgtest.a $(TEST_FLAGS) -o connection_test
 	./connection_test
+	gcov -r connection.cpp
 .PHONY: connection_test
 
 connection_manager_test: gtest
 	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc connection_manager_test.cpp libgtest.a $(TEST_FLAGS) -o connection_manager_test
 	./connection_manager_test
+	gcov -r connection_manager.cpp
 .PHONY: connection_manager_test
 
 gtest: $(GTEST_DIR)
@@ -60,4 +67,4 @@ unittest: http_server_test request_handler_test request_parser_test request_test
 clean: clean1
 	rm -rf http_server_test request_handler_test request_parser_test request_test response_test connection_test connection_manager_test
 
-test: unittest integration-test
+test: unittest integration-test clean
