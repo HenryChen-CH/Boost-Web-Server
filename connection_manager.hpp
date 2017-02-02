@@ -5,6 +5,7 @@
 #include <set>
 #include <memory>
 #include "connection.hpp"
+#include "gtest/gtest_prod.h"
 
 class connection_manager {
 public:
@@ -13,6 +14,7 @@ public:
     void stop_all();
 
 private:
+	FRIEND_TEST(connection_manager_test,start_test);
     std::set<connection_ptr> connection_pool_;
 };
 
