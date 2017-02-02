@@ -10,7 +10,7 @@ compile: $(SOURCE_FILES)
 	@g++ $(SOURCE_FILES) $(FLAGS) -o webserver
 
 clean1:
-	@rm -rf webserver *.dSYM *.o *.a *.gcda *.gcno
+	@rm -rf webserver *.dSYM *.o *.a *.gcda *.gcno *.gcov
 
 integration-test: compile
 	chmod a+x integration-test.py
