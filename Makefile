@@ -4,7 +4,7 @@ SOURCE_FILES = http_server.cpp nginx-configparser/config_parser.cc webserver_mai
 connection_manager.cpp request_parser.cpp response.cpp request.cpp request_handler_echo.cpp \
 request_handler_file.cpp mime_types.cpp
 TEST_FILES = http_server.cpp nginx-configparser/config_parser.cc connection.cpp connection_manager.cpp \
-request_handler.cpp request_parser.cpp response.cpp request.cpp
+ request_parser.cpp response.cpp request.cpp mime_types.cpp request_handler_echo.cpp request_handler_file.cpp
 GTEST_DIR = googletest/googletest
 
 all: compile
