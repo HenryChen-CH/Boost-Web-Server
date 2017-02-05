@@ -11,7 +11,4 @@ void request_handler_echo::handle_request(const request &req, response& resp) {
     h.name = "Content-Type";
     h.value = "text/plain";
     resp.headers.push_back(h);
-    h.name = "Content-Length";
-    h.value = std::to_string(req.header.size());
-    resp.headers.push_back(h);
 }
