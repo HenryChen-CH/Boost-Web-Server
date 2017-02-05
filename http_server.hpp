@@ -33,6 +33,7 @@ private:
 
     connection_manager connection_manager_;
     std::map<std::string, request_handler*> handler_mapping_;
+    void route_block_parse(NginxConfig *config);
 
     FRIEND_TEST(http_server_test,porttest);
 };
