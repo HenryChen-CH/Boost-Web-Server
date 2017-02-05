@@ -21,7 +21,7 @@ void connection::read() {
             result_type result = request_parser_.parse(request_, buffer_.data(), buffer_.data()+bytes_transferred);
             if (result == good) {
                 std::cout << "Package content:\n" << request_.ToString() << std::endl;
-                static_cast<request_handler_echo*>(handler_mapping_["/echo"])->handle_request(request_, response_);
+                router(request_.url())->handle_request(request_, response_);
                 std::cout << "Response: \n" << response_.ToString() << "\n";
                 write();
                 request_.header.clear();
@@ -49,4 +49,13 @@ void connection::write() {
                              ignored_ec);
         }
     });
+}
+
+request_handler* connection::router(std::string url) {
+    size_t n = url.find('/', 1);
+    std::string root = url.substr(0, n);
+    if (handler_mapping_.find(root) != handler_mapping_.end()) {
+        return handler_mapping_[root];
+    }
+    return handler_mapping_["/"];
 }

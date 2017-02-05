@@ -23,6 +23,7 @@ public:
 private:
     void read();
     void write();
+    request_handler* router(std::string url);
 
     boost::asio::ip::tcp::socket socket_;
     connection_manager& connection_manager_;
