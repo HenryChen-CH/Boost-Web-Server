@@ -7,15 +7,19 @@
 
 #include <string>
 #include <iterator>
+#include <fstream>
+#include <iostream>
 #include "request_handler.hpp"
 
 class request_handler_file : public request_handler{
 public:
-    request_handler_file(std::string dir_path);
+    request_handler_file(std::string root_url, std::string dir_path);
     void handle_request(const request &req, response& resp) override;
 
 private:
     std::string dir_path;
+    std::string root_url;
+    std::string file_name_from_path(const std::string file_path);
 };
 
 
