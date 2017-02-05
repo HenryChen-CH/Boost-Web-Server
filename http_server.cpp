@@ -25,6 +25,8 @@ bool http_server::Init(const std::string& config_file)
     }
 
     handler_mapping_["/echo"] = new request_handler_echo();
+    handler_mapping_["/static"] = new request_handler_file("/home/chen/share");
+    
     try {
         boost::asio::ip::tcp::resolver resolver(io_service_);
         boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve({"localhost", port});

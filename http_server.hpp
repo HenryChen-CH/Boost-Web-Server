@@ -9,6 +9,7 @@
 #include "connection_manager.hpp"
 #include "request_handler.hpp"
 #include "request_handler_echo.h"
+#include "request_handler_file.h"
 #include "googletest/googletest/include/gtest/gtest_prod.h"
 
 

@@ -10,7 +10,7 @@ GTEST_DIR = googletest/googletest
 all: compile
 
 compile: $(SOURCE_FILES)
-	@g++ $(SOURCE_FILES) $(TEST_FLAGS) -o webserver
+	g++ $(SOURCE_FILES) $(FLAGS) -o webserver
 
 clean1:
 	@rm -rf webserver *.dSYM *.o *.a *.gcda *.gcno *.gcov
