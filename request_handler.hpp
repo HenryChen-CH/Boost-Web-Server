@@ -10,7 +10,7 @@
 
 class request_handler{
 public:
-    virtual void handle_request(const request& req, response& reponse){};
+    virtual void handle_request(const request& req, response& resp){resp.status = not_found;};
 private:
 };
 
