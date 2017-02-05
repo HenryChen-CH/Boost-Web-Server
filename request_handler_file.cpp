@@ -27,7 +27,7 @@ void request_handler_file::handle_request(const request &req, response &resp) {
     std::string file_name = file_name_from_path(file_path);
     header h;
     h.name = "Content-Type";
-    h.value = "text/plain";
+    h.value = mime_types::extension_to_type(extension(file_name));
     resp.headers.push_back(h);
 
     resp.content.assign(std::istreambuf_iterator<char>(file),
@@ -42,4 +42,12 @@ std::string request_handler_file::file_name_from_path(const std::string file_pat
         file_name.insert(0, 1, file_path[j]);
     }
     return file_name;
+}
+
+std::string request_handler_file::extension(std::string file) {
+    size_t n = file.rfind('.');
+    if (n == std::string::npos) {
+        return "";
+    }
+    return file.substr(n);
 }
