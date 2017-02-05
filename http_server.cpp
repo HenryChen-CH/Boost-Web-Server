@@ -24,6 +24,7 @@ bool http_server::Init(const std::string& config_file)
         }
     }
 
+    handler_mapping_["/echo"] = new request_handler_echo();
     try {
         boost::asio::ip::tcp::resolver resolver(io_service_);
         boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve({"localhost", port});
@@ -48,7 +49,7 @@ void http_server::accept() {
             return;
         }
         if (!ec) {
-            connection_manager_.start(std::make_shared<connection>(std::move(socket_), connection_manager_, request_handler_));
+            connection_manager_.start(std::make_shared<connection>(std::move(socket_), connection_manager_, handler_mapping_));
         }
         accept();
     });

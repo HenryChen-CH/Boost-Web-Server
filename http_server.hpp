@@ -4,9 +4,13 @@
 #include "nginx-configparser/config_parser.h"
 #include <string>
 #include <boost/asio.hpp>
+#include <memory>
+#include <map>
 #include "connection_manager.hpp"
 #include "request_handler.hpp"
+#include "request_handler_echo.h"
 #include "googletest/googletest/include/gtest/gtest_prod.h"
+
 
 class http_server {
 public:
@@ -27,7 +31,7 @@ private:
     boost::asio::signal_set signals_;
 
     connection_manager connection_manager_;
-    request_handler request_handler_;
+    std::map<std::string, request_handler*> handler_mapping_;
 
     FRIEND_TEST(http_server_test,porttest);
 };

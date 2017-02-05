@@ -1,10 +1,10 @@
-#include "request_handler.hpp"
+//
+// Created by 陈昊 on 2/4/17.
+//
 
-request_handler::request_handler() {
+#include "request_handler_echo.h"
 
-}
-
-void request_handler::handle_request(const request &req, response& resp) {
+void request_handler_echo::handle_request(const request &req, response& resp) {
     resp.content = req.header;
     resp.status = ok;
     header h;

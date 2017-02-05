@@ -5,6 +5,7 @@
 #include <memory>
 #include <array>
 #include <utility>
+#include <map>
 #include "request_handler.hpp"
 #include "request.hpp"
 #include "response.hpp"
@@ -15,7 +16,7 @@ class connection_manager;
 
 class connection : public std::enable_shared_from_this<connection>{
 public:
-    explicit connection(boost::asio::ip::tcp::socket socket, connection_manager& manager, request_handler& handler);
+    explicit connection(boost::asio::ip::tcp::socket socket, connection_manager& manager, std::map<std::string, request_handler*>& handler_mapping_);
     void start();
     void stop();
 
@@ -25,7 +26,7 @@ private:
 
     boost::asio::ip::tcp::socket socket_;
     connection_manager& connection_manager_;
-    request_handler& request_handler_;
+    std::map<std::string, request_handler*> handler_mapping_;
     request_parser request_parser_;
     request request_;
     response response_;

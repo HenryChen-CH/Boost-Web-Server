@@ -1,7 +1,10 @@
 FLAGS = -l boost_system -pthread -std=c++0x -g -Wall
 TEST_FLAGS =-l boost_system -pthread -std=c++0x -g -Wall -fprofile-arcs -ftest-coverage
-SOURCE_FILES = http_server.cpp nginx-configparser/config_parser.cc webserver_main.cc connection.cpp connection_manager.cpp request_handler.cpp request_parser.cpp response.cpp request.cpp
-TEST_FILES = http_server.cpp nginx-configparser/config_parser.cc connection.cpp connection_manager.cpp request_handler.cpp request_parser.cpp response.cpp request.cpp
+SOURCE_FILES = http_server.cpp nginx-configparser/config_parser.cc webserver_main.cc connection.cpp \
+connection_manager.cpp request_parser.cpp response.cpp request.cpp request_handler_echo.cpp \
+request_handler_file.cpp
+TEST_FILES = http_server.cpp nginx-configparser/config_parser.cc connection.cpp connection_manager.cpp \
+request_handler.cpp request_parser.cpp response.cpp request.cpp
 GTEST_DIR = googletest/googletest
 
 all: compile
