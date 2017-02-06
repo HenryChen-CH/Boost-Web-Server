@@ -67,6 +67,12 @@ request_handler_file_test: libgtest.a
 	gcov -r request_handler_file_test.cpp
 .PHONY: request_handler_file_test
 
+mime_types_test: libgtest.a
+	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc mime_types_test.cpp libgtest.a $(TEST_FLAGS) -o mime_types_test
+	./mime_types_test
+	gcov -r mime_types_test.cpp
+.PHONY: mime_types_test
+
 libgtest.a: $(GTEST_DIR)
 	g++ -std=c++0x -isystem ${GTEST_DIR}/include -I${GTEST_DIR} -pthread -c ${GTEST_DIR}/src/gtest-all.cc
 	ar -rv libgtest.a gtest-all.o

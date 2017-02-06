@@ -5,7 +5,7 @@
 using namespace std;
 class request_handler_test:public ::testing::Test{
 protected:
-	request_handler handler;
+	request_handler_echo handler;
 	
 	
 };
