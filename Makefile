@@ -19,49 +19,49 @@ integration-test: compile
 	chmod a+x integration-test.py
 	./integration-test.py
 
-http_server_test: gtest
+http_server_test: libgtest.a
 	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc http_server_test.cpp libgtest.a $(TEST_FLAGS) -o http_server_test
 	./http_server_test
 	gcov -r http_server.cpp
 .PHONY: http_server_test
 
-request_handler_test: gtest
+request_handler_test: libgtest.a
 	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc request_handler_test.cpp libgtest.a $(TEST_FLAGS) -o request_handler_test
 	./request_handler_test
 	gcov -r request_handler.cpp
 .PHONY: request_handler_test
 
-request_parser_test: gtest
+request_parser_test: libgtest.a
 	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc request_parser_test.cpp libgtest.a $(TEST_FLAGS) -o request_parser_test
 	./request_parser_test
 	gcov -r request_parser.cpp
 .PHONY: request_parser_test
 
-request_test: gtest
+request_test: libgtest.a
 	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc request_test.cpp libgtest.a $(TEST_FLAGS) -o request_test
 	./request_test
 	gcov -r request.cpp
 .PHONY: request_test
 
-response_test: gtest
+response_test: libgtest.a
 	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc response_test.cpp libgtest.a $(TEST_FLAGS) -o response_test
 	./response_test
 	gcov -r response.cpp
 .PHONY: response_test
 
-connection_test: gtest
+connection_test: libgtest.a
 	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc connection_test.cpp libgtest.a $(TEST_FLAGS) -o connection_test
 	./connection_test
 	gcov -r connection.cpp
 .PHONY: connection_test
 
-connection_manager_test: gtest
+connection_manager_test: libgtest.a
 	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc connection_manager_test.cpp libgtest.a $(TEST_FLAGS) -o connection_manager_test
 	./connection_manager_test
 	gcov -r connection_manager.cpp
 .PHONY: connection_manager_test
 
-gtest: $(GTEST_DIR)
+libgtest.a: $(GTEST_DIR)
 	g++ -std=c++0x -isystem ${GTEST_DIR}/include -I${GTEST_DIR} -pthread -c ${GTEST_DIR}/src/gtest-all.cc
 	ar -rv libgtest.a gtest-all.o
 
