@@ -8,7 +8,7 @@ protected:
 	http_server myserver;
 };
 
-TEST_F(http_server_test,porttest){
+TEST_F(http_server_test,port_test){
 	EXPECT_TRUE(myserver.Init("config"));
 	EXPECT_EQ(myserver.port,"3000");
 }
@@ -18,5 +18,7 @@ TEST_F(http_server_test, config_file_not_exist){
 }
 
 TEST_F(http_server_test,url_test){
-	EXPECT_TRUE(1);
+	int type=myserver.route_block_parse(&myserver.config_);
+
+	EXPECT_EQ(type,2);
 }

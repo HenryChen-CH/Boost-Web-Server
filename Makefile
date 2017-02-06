@@ -9,8 +9,8 @@ GTEST_DIR = googletest/googletest
 
 all: compile
 
-compile: $(SOURCE_FILES)
-	g++ $(SOURCE_FILES) $(FLAGS) -o webserver
+compile: $(SOURCE_FILES)  ${GTEST_DIR}/include
+	g++ -isystem  ${GTEST_DIR}/include $(SOURCE_FILES) $(FLAGS) -o webserver
 
 clean1:
 	@rm -rf webserver *.dSYM *.o *.a *.gcda *.gcno *.gcov
@@ -25,11 +25,11 @@ http_server_test: libgtest.a
 	gcov -r http_server.cpp
 .PHONY: http_server_test
 
-request_handler_test: libgtest.a
-	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc request_handler_test.cpp libgtest.a $(TEST_FLAGS) -o request_handler_test
-	./request_handler_test
-	gcov -r request_handler.cpp
-.PHONY: request_handler_test
+request_handler_echo_test: libgtest.a
+	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc request_handler_echo_test.cpp libgtest.a $(TEST_FLAGS) -o request_handler_echo_test
+	./request_handler_echo_test
+	gcov -r request_handler_echo.cpp
+.PHONY: request_handler_echo_test
 
 request_parser_test: libgtest.a
 	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc request_parser_test.cpp libgtest.a $(TEST_FLAGS) -o request_parser_test
@@ -60,6 +60,12 @@ connection_manager_test: libgtest.a
 	./connection_manager_test
 	gcov -r connection_manager.cpp
 .PHONY: connection_manager_test
+
+request_handler_file_test: libgtest.a
+	g++ -isystem ${GTEST_DIR}/include $(TEST_FILES) ${GTEST_DIR}/src/gtest_main.cc request_handler_file_test.cpp libgtest.a $(TEST_FLAGS) -o request_handler_file_test
+	./request_handler_file_test
+	gcov -r request_handler_file_test.cpp
+.PHONY: request_handler_file_test
 
 libgtest.a: $(GTEST_DIR)
 	g++ -std=c++0x -isystem ${GTEST_DIR}/include -I${GTEST_DIR} -pthread -c ${GTEST_DIR}/src/gtest-all.cc

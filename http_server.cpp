@@ -69,7 +69,7 @@ void http_server::stop() {
     });
 }
 
-void http_server::route_block_parse(NginxConfig *config) {
+int http_server::route_block_parse(NginxConfig *config) {
     std::string root_url, dir;
     for (auto const& statement: config->statements_) {
         if (statement.get()->tokens_[0] == "root_url") {
@@ -78,8 +78,11 @@ void http_server::route_block_parse(NginxConfig *config) {
             dir = statement.get()->tokens_[1];
         }
     }
-    if (root_url == "/echo") handler_mapping_[root_url] = new request_handler_echo();
+    if (root_url == "/echo") {handler_mapping_[root_url] = new request_handler_echo();
+        return 1;
+    }
     else {
         handler_mapping_[root_url] = new request_handler_file(root_url, dir);
+        return 2;
     }
 }

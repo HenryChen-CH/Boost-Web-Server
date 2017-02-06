@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "request_handler.hpp"
+#include "request_handler_echo.h"
 #include "response.hpp"
 
 using namespace std;

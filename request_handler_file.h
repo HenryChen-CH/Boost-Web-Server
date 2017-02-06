@@ -11,7 +11,7 @@
 #include <iostream>
 #include "request_handler.hpp"
 #include "mime_types.hpp"
-
+#include "gtest/gtest_prod.h"
 class request_handler_file : public request_handler{
 public:
     request_handler_file(std::string root_url, std::string dir_path);
@@ -22,6 +22,10 @@ private:
     std::string root_url;
     std::string file_name_from_path(const std::string file_path);
     std::string extension(std::string file);
+
+    FRIEND_TEST(request_handler_file_test,path_test);
+    FRIEND_TEST(request_handler_file_test,extension_test);
+    FRIEND_TEST(request_handler_file_test,handler_test);
 };
 
 
