@@ -19,8 +19,9 @@ patch_send()
 
 server = Popen(['./webserver', 'config'], stdout=FNULL)
 headers = {'content-type': 'text/plain'}
-r = requests.get('http://localhost:3000', headers=headers)
+r = requests.get('http://localhost:3000/static/a.txt', headers=headers)
 
+file_content = "aaaa\n"
 if r.status_code == requests.codes.ok:
     if r.headers['content-type'] != "text/plain":
         print "Test fail"
@@ -28,11 +29,11 @@ if r.status_code == requests.codes.ok:
         print "expected content-type is: "+ "text/plain"
         server.kill()
         exit(1);
-        
-    if r.content != http_request_raw:
+
+    if r.content != file_content:
         print "Test fail"
         print "Request: "
-        print http_request_raw
+        print file_content
         print "Response content: "
         print r.content
         server.kill()
