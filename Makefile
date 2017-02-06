@@ -77,9 +77,9 @@ libgtest.a: $(GTEST_DIR)
 	g++ -std=c++0x -isystem ${GTEST_DIR}/include -I${GTEST_DIR} -pthread -c ${GTEST_DIR}/src/gtest-all.cc
 	ar -rv libgtest.a gtest-all.o
 
-unittest: http_server_test request_handler_test request_parser_test request_test response_test connection_test connection_manager_test
+unittest: http_server_test request_handler_echo_test request_parser_test request_test response_test connection_test connection_manager_test request_handler_file_test mime_types_test
 
 clean: clean1
-	rm -rf http_server_test request_handler_test request_parser_test request_test response_test connection_test connection_manager_test
+	rm -rf http_server_test request_handler_echo_test request_parser_test request_test response_test connection_test connection_manager_test request_handler_file_test mime_types_test
 
 test: unittest integration-test clean
