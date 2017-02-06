@@ -16,3 +16,7 @@ TEST_F(http_server_test,porttest){
 TEST_F(http_server_test, config_file_not_exist){
 	EXPECT_FALSE(myserver.Init("config1"));
 }
+
+TEST_F(http_server_test,url_test){
+	EXPECT_TRUE(1);
+}
