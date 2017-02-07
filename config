@@ -6,5 +6,6 @@ server {
     route {
         root_url /static;
         dir ./foo/bar;
+
     }
 }
