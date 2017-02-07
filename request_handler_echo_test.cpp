@@ -19,5 +19,5 @@ TEST_F(request_handler_test,normal){
 	copy(body.begin(), body.end(), back_inserter(req2.body));
 	handler.handle_request(req2,resp2);
 	string responsestr=resp2.ToString();
-	EXPECT_EQ(responsestr,"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 18\r\n\r\nGET / HTTP/1.1\r\n\r\n");
+	EXPECT_EQ(responsestr,"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nGET / HTTP/1.1\r\n\r\n");
 }
