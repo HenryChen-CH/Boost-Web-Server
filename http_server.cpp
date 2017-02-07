@@ -48,9 +48,11 @@ void http_server::accept() {
     acceptor_.async_accept(socket_,
     [this](boost::system::error_code ec) {
         if (!acceptor_.is_open()) {
+            BOOST_LOG_TRIVIAL(error) << "Acceptor is closed\n";
             return;
         }
         if (!ec) {
+            BOOST_LOG_TRIVIAL(info) << "Accept connection from: " << socket_.remote_endpoint().address().to_string() << "\n";
             connection_manager_.start(std::make_shared<connection>(std::move(socket_), connection_manager_, handler_mapping_));
         }
         accept();
@@ -65,6 +67,7 @@ void http_server::stop() {
     signals_.async_wait([this](boost::system::error_code ec, int signo){
         connection_manager_.stop_all();
         std::cout << "Server Stop\n";
+        BOOST_LOG_TRIVIAL(info) << "Server stop\n";
         exit(0);
     });
 }
