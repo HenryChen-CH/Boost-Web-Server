@@ -5,6 +5,6 @@ server {
     }
     route {
         root_url /static;
-        dir /home/chen/share;
+        dir .;
     }
 }
