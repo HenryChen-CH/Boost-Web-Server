@@ -1,19 +1,21 @@
 #include <iostream>
 #include "http_server.hpp"
+#include <boost/log/trivial.hpp>
 
-using namespace std;
 
 int main(int argc, char* argv[]) {
-    cout << "Server start" << endl;
+    std::cout << "Server start" << std::endl;
     if (argc != 2) {
-        cout << "Please specify config file\n";
+        std::cout << "Please specify config file\n";
         return 1;
     }
     http_server server;
-
-    if (server.Init(string(argv[1]))) {
+    BOOST_LOG_TRIVIAL(info) << "Server is initializing.....\n";
+    if (server.Init(std::string(argv[1]))) {
+        BOOST_LOG_TRIVIAL(info) << "Server is starting\n";
         server.start();
     };
 
-    return 0;
+    BOOST_LOG_TRIVIAL(error) << "Initialization failed\n";
+    return 1;
 }
