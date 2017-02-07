@@ -3,7 +3,7 @@
 //
 
 #include "request_handler_file.h"
-
+#include <iostream>
 request_handler_file::request_handler_file(std::string root_url, std::string dir_path) {
     this->dir_path = dir_path;
     this->root_url = root_url;
@@ -16,6 +16,7 @@ void request_handler_file::handle_request(const request &req, response &resp) {
         return;
     }
     std::string file_path = dir_path+req.url().substr(root_url.size());
+    std::cout<<file_path<<std::endl;
     std::ifstream file(file_path, std::ios::binary);
 
     if (!file.good()) {

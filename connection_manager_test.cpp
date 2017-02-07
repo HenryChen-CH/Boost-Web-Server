@@ -10,12 +10,12 @@ protected:
 };
 
 TEST_F(connection_manager_test,start_test){
-	request_handler request_handler_;
+	std::map<std::string, request_handler*> handler_mapping_;
 	boost::asio::io_service io_service_;
 	boost::asio::ip::tcp::socket socket_(io_service_);
-	connection_ptr connection_ptr1=std::make_shared<connection>(std::move(socket_), manager, request_handler_);
+	connection_ptr connection_ptr1=std::make_shared<connection>(std::move(socket_), manager, handler_mapping_);
 	manager.start(connection_ptr1);
-	manager.start(std::make_shared<connection>(std::move(socket_), manager, request_handler_));
+	manager.start(std::make_shared<connection>(std::move(socket_), manager, handler_mapping_));
 	manager.stop(connection_ptr1);
 	EXPECT_EQ(manager.connection_pool_.size(),1);
 	manager.stop_all();
