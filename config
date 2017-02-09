@@ -1,3 +1,11 @@
 server {
     listen 3000;
+    route {
+        root_url /echo;
+    }
+    route {
+        root_url /static;
+        dir ./foo/bar;
+
+    }
 }

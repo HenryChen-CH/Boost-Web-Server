@@ -4,16 +4,14 @@
 #include "request.hpp"
 #include "response.hpp"
 #include <boost/asio.hpp>
-#include "request.hpp"
+#include "header.hpp"
 #include <string>
 
 
 class request_handler{
 public:
-    request_handler();
-    void handle_request(const request& req, response& reponse);
+    virtual void handle_request(const request& req, response& resp){resp.status = not_found;};
 private:
-
 };
 
 #endif

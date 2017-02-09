@@ -4,6 +4,7 @@
 #include <boost/asio.hpp>
 #include <vector>
 #include <iostream>
+#include <string>
 
 class request{
 public:
@@ -12,6 +13,8 @@ public:
     std::vector<char> body;
 
     std::string ToString();
+
+    std::string url() const;
 private:
 
 };

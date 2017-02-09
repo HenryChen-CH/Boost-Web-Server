@@ -1,10 +1,11 @@
 #include "connection.hpp"
 #include "connection_manager.hpp"
+#include "request_handler_echo.h"
 
-connection::connection(boost::asio::ip::tcp::socket socket, connection_manager &manager, request_handler &handler)
+connection::connection(boost::asio::ip::tcp::socket socket, connection_manager &manager, std::map<std::string, request_handler*>& handler_mapping)
 : socket_(std::move(socket)),
   connection_manager_(manager),
-  request_handler_(handler)
+  handler_mapping_(handler_mapping)
 {
 
 }
@@ -20,7 +21,7 @@ void connection::read() {
             result_type result = request_parser_.parse(request_, buffer_.data(), buffer_.data()+bytes_transferred);
             if (result == good) {
                 std::cout << "Package content:\n" << request_.ToString() << std::endl;
-                request_handler_.handle_request(request_, response_);
+                router(request_.url())->handle_request(request_, response_);
                 std::cout << "Response: \n" << response_.ToString() << "\n";
                 write();
                 request_.header.clear();
@@ -48,4 +49,13 @@ void connection::write() {
                              ignored_ec);
         }
     });
+}
+
+request_handler* connection::router(std::string url) {
+    size_t n = url.find('/', 1);
+    std::string root = url.substr(0, n);
+    if (handler_mapping_.find(root) != handler_mapping_.end()) {
+        return handler_mapping_[root];
+    }
+    return handler_mapping_["/"];
 }
