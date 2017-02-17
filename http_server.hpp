@@ -6,6 +6,7 @@
 #include <boost/asio.hpp>
 #include <memory>
 #include <map>
+#include <boost/log/trivial.hpp>
 #include "connection_manager.hpp"
 #include "request_handler.hpp"
 #include "request_handler_echo.h"

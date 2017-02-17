@@ -1,4 +1,4 @@
-FLAGS = -l boost_system -pthread -std=c++0x -g -Wall
+FLAGS = -l boost_system -lboost_log -pthread -std=c++0x -g -Wall -DBOOST_LOG_DYN_LINK
 TEST_FLAGS =-l boost_system -pthread -std=c++0x -g -Wall -fprofile-arcs -ftest-coverage
 SOURCE_FILES = http_server.cpp nginx-configparser/config_parser.cc webserver_main.cc connection.cpp \
 connection_manager.cpp request_parser.cpp response.cpp request.cpp request_handler_echo.cpp \

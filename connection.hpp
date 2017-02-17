@@ -6,6 +6,7 @@
 #include <array>
 #include <utility>
 #include <map>
+#include <boost/log/trivial.hpp>
 #include "request_handler.hpp"
 #include "request.hpp"
 #include "response.hpp"
