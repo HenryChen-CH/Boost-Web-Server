@@ -1,10 +1,10 @@
 #ifndef REQUEST_HANDLER_HPP
 #define REQUEST_HANDLER_HPP
 
-#include "request.hpp"
-#include "response.hpp"
+#include "request.h"
+#include "response.h"
 #include <boost/asio.hpp>
-#include "header.hpp"
+#include "header.h"
 #include <string>
 
 

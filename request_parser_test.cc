@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "request_parser.hpp"
-#include "request.hpp"
+#include "request_parser.h"
+#include "request.h"
 #include <string>
 #include <cstring>
 

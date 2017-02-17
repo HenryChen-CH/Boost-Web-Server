@@ -1,7 +1,7 @@
 #ifndef REQUEST_PARSER_HPP
 #define REQUEST_PARSER_HPP
 
-#include "request.hpp"
+#include "request.h"
 
 enum result_type { good, bad, intermedia };
 

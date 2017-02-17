@@ -7,10 +7,10 @@
 #include <utility>
 #include <map>
 #include <boost/log/trivial.hpp>
-#include "request_handler.hpp"
-#include "request.hpp"
-#include "response.hpp"
-#include "request_parser.hpp"
+#include "request_handler.h"
+#include "request.h"
+#include "response.h"
+#include "request_parser.h"
 #include <iostream>
 
 class connection_manager;

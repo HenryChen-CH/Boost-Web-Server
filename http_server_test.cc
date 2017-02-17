@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "http_server.hpp"
+#include "http_server.h"
 
 using namespace std;
 

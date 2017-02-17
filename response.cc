@@ -1,4 +1,4 @@
-#include "response.hpp"
+#include "response.h"
 
 const std::string ok_ =
         "HTTP/1.1 200 OK\r\n";

@@ -7,8 +7,8 @@
 #include <memory>
 #include <map>
 #include <boost/log/trivial.hpp>
-#include "connection_manager.hpp"
-#include "request_handler.hpp"
+#include "connection_manager.h"
+#include "request_handler.h"
 #include "request_handler_echo.h"
 #include "request_handler_file.h"
 #include "googletest/googletest/include/gtest/gtest_prod.h"

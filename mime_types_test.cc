@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "mime_types.hpp"
+#include "mime_types.h"
 
 using namespace std;
 

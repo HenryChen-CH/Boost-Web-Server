@@ -9,8 +9,8 @@
 #include <iterator>
 #include <fstream>
 #include <iostream>
-#include "request_handler.hpp"
-#include "mime_types.hpp"
+#include "request_handler.h"
+#include "mime_types.h"
 #include "gtest/gtest_prod.h"
 class request_handler_file : public request_handler{
 public:

@@ -1,4 +1,4 @@
-#include "http_server.hpp"
+#include "http_server.h"
 
 http_server::http_server()
 : io_service_(),
@@ -26,7 +26,7 @@ bool http_server::Init(const std::string& config_file)
         }
     }
     handler_mapping_["/"] = new request_handler();
-    
+
     try {
         boost::asio::ip::tcp::resolver resolver(io_service_);
         boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve({"localhost", port});

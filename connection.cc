@@ -1,5 +1,5 @@
-#include "connection.hpp"
-#include "connection_manager.hpp"
+#include "connection.h"
+#include "connection_manager.h"
 #include "request_handler_echo.h"
 
 connection::connection(boost::asio::ip::tcp::socket socket, connection_manager &manager, std::map<std::string, request_handler*>& handler_mapping)

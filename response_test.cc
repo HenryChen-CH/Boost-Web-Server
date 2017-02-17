@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "response.hpp"
-#include "header.hpp"
+#include "response.h"
+#include "header.h"
 #include <string>
 
 using namespace std;

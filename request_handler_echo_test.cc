@@ -1,13 +1,13 @@
 #include "gtest/gtest.h"
 #include "request_handler_echo.h"
-#include "response.hpp"
+#include "response.h"
 
 using namespace std;
 class request_handler_test:public ::testing::Test{
 protected:
 	request_handler_echo handler;
-	
-	
+
+
 };
 
 TEST_F(request_handler_test,normal){

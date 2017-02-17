@@ -5,7 +5,7 @@
 #ifndef TEAM13_REQUEST_HANDLER_ECHO_H
 #define TEAM13_REQUEST_HANDLER_ECHO_H
 
-#include "request_handler.hpp"
+#include "request_handler.h"
 #include <string>
 
 class request_handler_echo : public request_handler{
