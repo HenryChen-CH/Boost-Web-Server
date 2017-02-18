@@ -1,10 +1,7 @@
-server {
-    listen 3000;
-    route {
-        root_url /echo;
-    }
-    route {
-        root_url /static;
-        dir ./foo/bar;
-    }
+listen 3000;
+
+path / StaticHandler {
+  root ~/foo/bar;
 }
+
+path /echo EchoHandler {}
