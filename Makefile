@@ -83,3 +83,7 @@ clean: clean1
 	rm -rf http_server_test request_handler_echo_test request_parser_test request_test response_test connection_test connection_manager_test request_handler_file_test mime_types_test
 
 test: unittest integration-test clean
+
+HANDLERS=RequestHandler.cc EchoHandler.cc StaticFileHandler.cc
+handler_compile: $(HANDLERS)
+	g++ -std=c++0x $(HANDLERS) Request.cc Response.cc main.cc -o main
