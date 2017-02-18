@@ -18,6 +18,11 @@ public:
     Headers headers() const;
 
     std::string body() const;
+
+private:
+    std::string method_, uri_, version_, body_, raw_;
+    std::vector<std::pair<std::string, std::string>> headers_;
+
 };
 
 #endif
