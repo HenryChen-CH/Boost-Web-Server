@@ -19,6 +19,10 @@ bool http_server::Init(NginxConfig& config)
             BOOST_LOG_TRIVIAL(info) << "Server is listening on port: " << port << "\n";
         } else if (statement.get()->tokens_[0] == "path") {
             RequestHandler * tmp = RequestHandler::CreateByName(statement->tokens_[2].c_str());
+            if (tmp == nullptr) {
+                BOOST_LOG_TRIVIAL(error) << "Handler: " <<  statement->tokens_[2].c_str() << " Not Found\n";
+                return false;
+            }
             tmp->Init(statement->tokens_[1], *statement->child_block_.get());
             BOOST_LOG_TRIVIAL(info) << statement->tokens_[1] << " " << statement->tokens_[2] << "\n";
             handler_mapping_[statement->tokens_[1]] = tmp;
