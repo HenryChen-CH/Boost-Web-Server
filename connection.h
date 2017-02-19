@@ -20,6 +20,7 @@ public:
     explicit connection(boost::asio::ip::tcp::socket socket, connection_manager& manager, std::map<std::string, RequestHandler*>& handler_mapping_);
     void start();
     void stop();
+    static std::string longest_prefix_matching(std::vector<std::string>& uris, std::string& uri);
 
 private:
     void read();
@@ -36,7 +37,6 @@ private:
     std::string raw_response = "";
 
     std::array<char, 1024> buffer_;
-
 };
 
 typedef std::shared_ptr<connection> connection_ptr;

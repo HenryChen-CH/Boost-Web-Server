@@ -62,12 +62,32 @@ void connection::write() {
 }
 
 RequestHandler* connection::router(std::string url) {
-    size_t n = url.find('/', 1);
-    std::string root = url.substr(0, n);
-    if (handler_mapping_.find(root) != handler_mapping_.end()) {
-        BOOST_LOG_TRIVIAL(info) << "Route: " << url << " to request handler: " << root << "\n";
-        return handler_mapping_[root];
+    std::vector<std::string> uris;
+    for (auto p = handler_mapping_.begin(); p != handler_mapping_.end(); p++) {
+        uris.push_back(p->first);
     }
-    BOOST_LOG_TRIVIAL(info) << "Route " << url << " to default request handler" << "\n";
+    std::string longest_match = longest_prefix_matching(uris, url);
+    if (longest_match.length() != 0) {
+        BOOST_LOG_TRIVIAL(info) << "Longest prefix matching for " << url << " is " << longest_match << "\n";
+        return handler_mapping_[longest_match];
+    }
+    BOOST_LOG_TRIVIAL(info) << "Longest prefix matching for " << url << " Not Found\n";
     return handler_mapping_[NOT_FOUND_HANDLER];
+}
+
+std::string connection::longest_prefix_matching(std::vector<std::string>& uris, std::string& uri) {
+    size_t max = 0;
+    std::string res = "";
+    for (std::string s: uris) {
+        size_t n = uri.find(s);
+        if (n == 0) {
+            if (uri.length() == s.length() || uri[s.length()] == '/') {
+                if (s.length() > max) {
+                    max = s.length();
+                    res = s;
+                }
+            }
+        }
+    }
+    return res;
 }
