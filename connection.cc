@@ -22,7 +22,10 @@ void connection::read() {
                 BOOST_LOG_TRIVIAL(info) << "Receive HTTP Packet from: " << socket_.remote_endpoint().address().to_string() << "\n";
                 BOOST_LOG_TRIVIAL(info) << raw_packet << "\n";
                 request_ = std::move(Request::Parse(raw_packet));
-                router(request_->uri())->HandleRequest(*request_.get(), &response_);
+                RequestHandler::Status status = router(request_->uri())->HandleRequest(*request_.get(), &response_);
+                if (status != RequestHandler::OK) {
+                    handler_mapping_[NOT_FOUND_HANDLER]->HandleRequest(*request_.get(), &response_);
+                }
                 raw_response = response_.ToString();
                 write();
             } else {
@@ -66,5 +69,5 @@ RequestHandler* connection::router(std::string url) {
         return handler_mapping_[root];
     }
     BOOST_LOG_TRIVIAL(info) << "Route " << url << " to default request handler" << "\n";
-    return handler_mapping_["/"];
+    return handler_mapping_[NOT_FOUND_HANDLER];
 }

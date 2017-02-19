@@ -28,6 +28,12 @@ bool http_server::Init(NginxConfig& config)
             handler_mapping_[statement->tokens_[1]] = tmp;
         }
     }
+    RequestHandler* tmp = RequestHandler::CreateByName("NotFoundHandler");
+    if (tmp == nullptr) {
+        BOOST_LOG_TRIVIAL(error) << "NotFoundHandler class not found\n";
+        return false;
+    }
+    handler_mapping_[NOT_FOUND_HANDLER] = tmp;
 
     try {
         boost::asio::ip::tcp::resolver resolver(io_service_);

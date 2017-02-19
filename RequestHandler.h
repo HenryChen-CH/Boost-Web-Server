@@ -9,6 +9,7 @@
 #include "nginx-configparser/config_parser.h"
 
 const std::string header_content_type_ = "Content-Type";
+const std::string NOT_FOUND_HANDLER = "NOTFOUND";
 
 class RequestHandler {
 public:
