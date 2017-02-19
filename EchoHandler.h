@@ -7,6 +7,9 @@ class EchoHandler : public RequestHandler {
 public:
     Status HandleRequest(const Request& request, Response* response);
     Status Init(const std::string& uri_prefix, const NginxConfig& config);
+
+private:
+    std::string uri_prefix_;
 };
 
 REGISTER_REQUEST_HANDLER(EchoHandler);
