@@ -8,10 +8,14 @@
 #include "Request.h"
 #include "nginx-configparser/config_parser.h"
 
+const std::string header_content_type_ = "Content-Type";
+
 class RequestHandler {
 public:
     enum Status {
-        OK = 0
+        OK = 0,
+        NOT_FOUND = 1,
+        NOT_ENOUGH_PARAM = 2
         // Define your status codes here.
     };
     static RequestHandler* CreateByName(const char* type);
