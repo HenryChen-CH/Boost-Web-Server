@@ -1,7 +1,7 @@
 listen 3000;
 
-path / StaticHandler {
-  root ~/foo/bar;
+path /static StaticFileHandler {
+  root ./foo/bar;
 }
 
 path /echo EchoHandler {}
