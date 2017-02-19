@@ -2,17 +2,30 @@
 #define RESPONSE_H
 
 #include <string>
+#include <map>
 
 class Response {
 public:
     enum ResponseCode {
         // Define your HTTP response codes here.
+        ok = 200,
+        bad_request = 400,
+        not_found = 404
     };
 
     void SetStatus(const ResponseCode response_code);
     void AddHeader(const std::string& header_name, const std::string& header_value);
     void SetBody(const std::string& body);
+    void SetVersion(const std::string& version);
 
     std::string ToString();
+
+private:
+    std::string body_;
+    std::map<std::string, std::string> headers_;
+    ResponseCode response_code_;
+    std::string version_ = "HTTP/1.0";
+
+    std::string to_string(ResponseCode status);
 };
 #endif
