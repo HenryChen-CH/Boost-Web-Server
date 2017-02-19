@@ -10,6 +10,7 @@
 #include "connection_manager.h"
 #include "RequestHandler.h"
 #include "googletest/googletest/include/gtest/gtest_prod.h"
+#include "StatusHandler.h"
 
 
 class http_server {

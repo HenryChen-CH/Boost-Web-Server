@@ -23,6 +23,7 @@ bool http_server::Init(NginxConfig& config)
                 BOOST_LOG_TRIVIAL(error) << "Handler: " <<  statement->tokens_[2].c_str() << " Not Found\n";
                 return false;
             }
+            StatusHandler::LogHandler(statement->tokens_[1], statement->tokens_[2]);
             tmp->Init(statement->tokens_[1], *statement->child_block_.get());
             BOOST_LOG_TRIVIAL(info) << statement->tokens_[1] << " " << statement->tokens_[2] << "\n";
             handler_mapping_[statement->tokens_[1]] = tmp;
@@ -33,6 +34,7 @@ bool http_server::Init(NginxConfig& config)
         BOOST_LOG_TRIVIAL(error) << "NotFoundHandler class not found\n";
         return false;
     }
+    StatusHandler::LogHandler(NOT_FOUND_HANDLER, "NotFoundHandler");
     handler_mapping_[NOT_FOUND_HANDLER] = tmp;
 
     try {

@@ -26,6 +26,9 @@ void connection::read() {
                 if (status != RequestHandler::OK) {
                     handler_mapping_[NOT_FOUND_HANDLER]->HandleRequest(*request_.get(), &response_);
                 }
+                StatusHandler::LogRequest(request_->uri(), response_.GetResponseCode());
+                BOOST_LOG_TRIVIAL(info) << "Log Into StatusHandler uri: " << request_->uri() \
+                    << " response code: " <<  response_.GetResponseCode() << "\n";
                 raw_response = response_.ToString();
                 write();
             } else {

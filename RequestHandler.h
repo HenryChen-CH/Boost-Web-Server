@@ -10,6 +10,7 @@
 
 const std::string header_content_type_ = "Content-Type";
 const std::string NOT_FOUND_HANDLER = "NOTFOUND";
+const std::string STATUS_HANDLER = "/status";
 
 class RequestHandler {
 public:

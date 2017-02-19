@@ -12,6 +12,7 @@
 #include "Response.h"
 #include "request_parser.h"
 #include <iostream>
+#include "StatusHandler.h"
 
 class connection_manager;
 

@@ -5,3 +5,5 @@ path /f StaticFileHandler {
 }
 
 path /f/bar EchoHandler {}
+
+path /status StatusHandler {}

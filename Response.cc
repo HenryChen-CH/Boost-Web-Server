@@ -56,3 +56,7 @@ std::string Response::to_string(ResponseCode status) {
             return bad_request_;
     }
 }
+
+Response::ResponseCode Response::GetResponseCode() {
+    return response_code_;
+}
