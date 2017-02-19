@@ -6,3 +6,4 @@ webserver
 *.dSYM
 *.out
 *.gcno
+*.o
