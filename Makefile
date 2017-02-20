@@ -6,12 +6,12 @@ CPP_FILES = $(wildcard ./*.cc)
 OBJ_FILES := $(addprefix ,$(notdir $(CPP_FILES:.cpp=.o)))
 NGINX_FILES=nginx-configparser/config_parser.cc
 
-main: $(OBJ_FILES) $(NGINX_FILES)
+webserver: $(OBJ_FILES) $(NGINX_FILES)
 	g++ -isystem ${GTEST_DIR}/include -std=c++0x $^ $(BOOST_FLAGS) -o $@
-.PHONY: main
+.PHONY: webserver
 
 %.o: %.cpp
 	g++ -std=c++11 $(BOOST_FLAGS) -isystem ${GTEST_DIR}/include -c -o $@ $<
 
 clean:
-	@rm -rf obj main *.o *.d
+	@rm -rf obj webserver *.o *.d
