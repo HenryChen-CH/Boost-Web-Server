@@ -23,6 +23,10 @@ bool http_server::Init(NginxConfig& config)
                 BOOST_LOG_TRIVIAL(error) << "Handler: " <<  statement->tokens_[2].c_str() << " Not Found\n";
                 return false;
             }
+            if (handler_mapping_.find(statement->tokens_[1]) != handler_mapping_.end()) {
+                BOOST_LOG_TRIVIAL(error) << "Duplicate Path: " << statement->tokens_[1] << "\n";
+                return false;
+            }
             StatusHandler::LogHandler(statement->tokens_[1], statement->tokens_[2]);
             tmp->Init(statement->tokens_[1], *statement->child_block_.get());
             BOOST_LOG_TRIVIAL(info) << statement->tokens_[1] << " " << statement->tokens_[2] << "\n";
