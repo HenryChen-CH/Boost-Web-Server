@@ -6,6 +6,7 @@
 #include <utility>
 #include <sstream>
 #include <map>
+#include <mutex>
 
 class StatusHandler : public RequestHandler {
 public:
@@ -16,6 +17,7 @@ public:
     static void LogHandler(std::string uri, std::string name);
     static std::vector<std::pair<std::string, Response::ResponseCode >> request_logs_;
     static std::map<std::string, std::string> handlers_name_;
+    static std::mutex request_mutex_;
 private:
     std::string uri_prefix_;
 };

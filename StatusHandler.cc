@@ -2,6 +2,7 @@
 
 std::vector<std::pair<std::string, Response::ResponseCode >> StatusHandler::request_logs_;
 std::map<std::string, std::string> StatusHandler::handlers_name_;
+std::mutex StatusHandler::request_mutex_;
 
 RequestHandler::Status StatusHandler::Init(const std::string& uri_prefix, const NginxConfig& config) {
     uri_prefix_ = uri_prefix;
@@ -12,6 +13,7 @@ RequestHandler::Status StatusHandler::HandleRequest(const Request& request, Resp
     response->SetStatus(Response::ok);
     response->SetVersion("HTTP/1.0");
     response->AddHeader(header_content_type_, "text/html");
+    std::lock_guard<std::mutex> lock(request_mutex_);
     std::map<Response::ResponseCode ,int> response_code_;
     std::map<std::string, int> uri_;
     for (auto& p: request_logs_) {
@@ -60,6 +62,7 @@ RequestHandler::Status StatusHandler::HandleRequest(const Request& request, Resp
 }
 
 void StatusHandler::LogRequest(std::string uri, Response::ResponseCode code) {
+    std::lock_guard<std::mutex> lock(request_mutex_);
     request_logs_.push_back(std::make_pair(uri, code));
 }
 
