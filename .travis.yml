@@ -9,4 +9,4 @@ addons:
    packages:
    - libboost-all-dev
 
-script: make
+script: make test;make

@@ -1,17 +1,37 @@
-BOOST_FLAGS =-lboost_system -lboost_log -pthread -g -Wall -DBOOST_LOG_DYN_LINK
-TEST_FLAGS =-lboost_system -lboost_log -pthread -g -Wall -fprofile-arcs -ftest-coverage -DBOOST_LOG_DYN_LIN
+BOOST_FLAGS = -lboost_system -lboost_log -pthread -g -Wall -DBOOST_LOG_DYN_LINK
+TEST_FLAGS = -lboost_system -lboost_log -pthread -g -Wall -fprofile-arcs -ftest-coverage -DBOOST_LOG_DYN_LIN
+COMMON_FLAGS = -std=c++11 -pthread -g -Wall
 
 GTEST_DIR = googletest/googletest
 CPP_FILES = $(wildcard ./src/*.cc)
 OBJ_FILES := $(notdir $(CPP_FILES:.cc=.o))
-NGINX_FILES=nginx-configparser/config_parser.cc
+NGINX_FILES= nginx-configparser/config_parser.cc
+TEST_FILES = $(wildcard ./test/*_test.cc)
+TESTS = $(TEST_FILES:%.cc=%)
 
 webserver: $(OBJ_FILES) $(NGINX_FILES)
-	g++ -isystem ${GTEST_DIR}/include -std=c++0x $^ $(BOOST_FLAGS) -o $@
+	g++ -std=c++11 $^ $(BOOST_FLAGS) -o $@
 .PHONY: webserver
 
 %.o: src/%.cc $(NGINX_FILES)
-	g++ -std=c++11 $(BOOST_FLAGS) -isystem ${GTEST_DIR}/include -I . -c -o $@ $<
+	g++ -std=c++11 $(BOOST_FLAGS) -I . -c -o $@ $<
+
+test/%_test : test/%_test.cc src/%.cc libgtest.a
+	g++ $(COMMON_FLAGS) -isystem ${GTEST_DIR}/include ${GTEST_DIR}/src/gtest_main.cc -I ./src -I . $^ $(TEST_FLAGS)  -o $@ 
+	$@
+	rm $@
+	@mv *.gcno src/
+	@mv *.gcda src/
+	gcov -r $(word 2, $^)
+	
+test: $(TESTS) 
+	chmod a+x integration-test.py
+	./integration-test.py
+.PHONY: test
+
+libgtest.a: $(GTEST_DIR)
+	g++ -std=c++11 -isystem ${GTEST_DIR}/include -I${GTEST_DIR} -pthread -c ${GTEST_DIR}/src/gtest-all.cc
+	ar -rv libgtest.a gtest-all.o
 
 clean:
-	@rm -rf obj webserver *.o *.d
+	@rm -rf obj webserver *.o *.d *.a src/*.gcno src/*.gcda *.gcov
