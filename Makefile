@@ -25,7 +25,7 @@ test/%_test : test/%_test.cc libgtest.a src/%.cc
 	@mv *.gcda src/
 	gcov -r $(word 3, $^)
 	
-test: $(TESTS) 
+test: $(TESTS) webserver
 	chmod a+x integration-test.py
 	./integration-test.py
 .PHONY: test
