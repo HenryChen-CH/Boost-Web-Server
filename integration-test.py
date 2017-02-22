@@ -19,9 +19,9 @@ patch_send()
 
 server = Popen(['./webserver', 'config'], stdout=FNULL)
 headers = {'content-type': 'text/plain'}
-r = requests.get('http://localhost:3000/static/a.txt', headers=headers)
+r = requests.get('http://localhost:3000/f/temp.txt', headers=headers)
 
-file_content = "aaaa\n"
+file_content = "something"
 if r.status_code == requests.codes.ok:
     if r.headers['content-type'] != "text/plain":
         print "Test fail"
