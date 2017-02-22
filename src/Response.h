@@ -3,7 +3,7 @@
 
 #include <string>
 #include <map>
-
+#include <gtest/gtest_prod.h>
 class Response {
 public:
     enum ResponseCode {
@@ -28,5 +28,7 @@ private:
     std::string version_ = "HTTP/1.0";
 
     std::string to_string(ResponseCode status);
+    FRIEND_TEST(NotFoundHandler_test,handle_request_test);
+    FRIEND_TEST(Response_test,integrated_test);
 };
 #endif

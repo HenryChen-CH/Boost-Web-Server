@@ -7,7 +7,7 @@
 #include <sstream>
 #include <map>
 #include <mutex>
-
+#include <gtest/gtest_prod.h>
 class StatusHandler : public RequestHandler {
 public:
     Status Init(const std::string& uri_prefix, const NginxConfig& config);
@@ -20,6 +20,7 @@ public:
     static std::mutex request_mutex_;
 private:
     std::string uri_prefix_;
+    FRIEND_TEST(StatusHandler_test,init_test);
 };
 
 REGISTER_REQUEST_HANDLER(StatusHandler);
