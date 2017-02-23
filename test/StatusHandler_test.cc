@@ -8,15 +8,15 @@ protected:
 
 TEST_F(StatusHandler_test,init_test){
 	NginxConfig config;
-	handler_.Init("foo/bar",config);
+	RequestHandler::Status status=handler_.Init("foo/bar",config);
 	EXPECT_EQ(handler_.uri_prefix_,"foo/bar");
+	EXPECT_EQ(status,0);
 }
 
 TEST_F(StatusHandler_test,Handle_Request_test){
 	Response resp;
 	Request req;
-	string header = "GET / HTTP/1.1\r\n\r\n";
-	string body = "body";
-	NotFoundHandler handler_;
-	EXPECT_EQ(1,1);
+	RequestHandler::Status status=handler_.HandleRequest(req,&resp);
+
+	EXPECT_EQ(status,0);
 }

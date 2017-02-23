@@ -29,6 +29,7 @@ private:
 
     std::string to_string(ResponseCode status);
     FRIEND_TEST(NotFoundHandler_test,handle_request_test);
+    FRIEND_TEST(EchoHandler_test,handle_request_test);
     FRIEND_TEST(Response_test,integrated_test);
 };
 #endif
