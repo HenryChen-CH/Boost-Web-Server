@@ -1,9 +1,0 @@
-listen 3000;
-
-path /f StaticFileHandler {
-  root ./foo/bar;
-}
-
-path /f/bar EchoHandler {}
-
-path /status StatusHandler {}

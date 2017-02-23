@@ -11,9 +11,9 @@ TEST_F(StaticFileHandler_test,init_test){
 	StaticFileHandler handler;
 	NginxConfig config;
 	assert(parser.Parse("./config",&config));
-	handler.Init("foo/bar", *(config.statements_[1].child_block_.get());
-	EXPECT_EQ(handler.uri_prefix_,"foo/bar");
-	EXPECT_EQ(handler.root_,"/f");
+	handler.Init("/f", *(config.statements_[1]->child_block_.get()));
+	EXPECT_EQ(handler.uri_prefix_,"/f");
+	EXPECT_EQ(handler.root_,"./foo/bar");
 	//EXPECT_EQ(1,1);
 }
 
