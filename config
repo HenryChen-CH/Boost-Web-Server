@@ -1,11 +1,9 @@
-server {
-    listen 3000;
-    route {
-        root_url /echo;
-    }
-    route {
-        root_url /static;
-        dir ./foo/bar;
+listen 3000;
 
-    }
+path /f StaticFileHandler {
+  root ./foo/bar;
 }
+
+path /f/bar EchoHandler {}
+
+path /status StatusHandler {}
