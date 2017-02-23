@@ -1,7 +1,10 @@
 #include "gtest/gtest.h"
 #include "NotFoundHandler.h"
 #include <string>
+<<<<<<< HEAD
 
+=======
+>>>>>>> e8dee0e45a8aceb92f9d1816197aab30884bc613
 using namespace std;
 class NotFoundHandler_test : public ::testing::Test{
 protected:
