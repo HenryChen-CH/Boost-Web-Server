@@ -24,7 +24,7 @@ public:
 private:
     std::string body_;
     std::map<std::string, std::string> headers_;
-    ResponseCode response_code_;
+    ResponseCode response_code_ = bad_request;
     std::string version_ = "HTTP/1.0";
 
     std::string to_string(ResponseCode status);
