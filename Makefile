@@ -35,4 +35,4 @@ libgtest.a: $(GTEST_DIR)
 	ar -rv libgtest.a gtest-all.o
 
 clean:
-	@rm -rf obj webserver *.o *.d *.a src/*.gcno src/*.gcda *.gcov *.gcno
+	@rm -rf obj webserver *.o *.d *.a src/*.gcno src/*.gcda *.gcov *.gcno *.gcda

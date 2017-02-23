@@ -1,4 +1,5 @@
 listen 3000;
+listen 3000;
 
 path /f StaticFileHandler {
   root ./foo/bar;

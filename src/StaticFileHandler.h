@@ -7,6 +7,7 @@
 #include <fstream>
 #include <streambuf>
 #include <boost/log/trivial.hpp>
+#include <gtest/gtest_prod.h>
 
 class StaticFileHandler : public RequestHandler{
 public:
@@ -19,6 +20,7 @@ private:
 
     std::string file_name_from_path(std::string file_path) const;
     std::string extension(std::string file) const;
+    FRIEND_TEST(StaticFileHandler_test,init_test);
 };
 
 REGISTER_REQUEST_HANDLER(StaticFileHandler);
