@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 #include <vector>
-
+#include <gtest/gtest_prod.h>
 class Request {
 public:
     static std::unique_ptr<Request> Parse(const std::string& raw_request);
@@ -22,7 +22,7 @@ public:
 private:
     std::string method_, uri_, version_, body_, raw_;
     std::vector<std::pair<std::string, std::string>> headers_;
-
+    FRIEND_TEST(Request_test,test1);
 };
 
 #endif

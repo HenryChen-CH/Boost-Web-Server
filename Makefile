@@ -15,7 +15,7 @@ webserver: $(OBJ_FILES) $(NGINX_FILES)
 .PHONY: webserver
 
 %.o: src/%.cc $(NGINX_FILES)
-	g++ -std=c++11 $(BOOST_FLAGS) -I . -c -o $@ $<
+	g++ -std=c++11 $(BOOST_FLAGS) -I ${GTEST_DIR}/include -I . -c -o $@ $<
 
 test/%_test : test/%_test.cc libgtest.a src/%.cc
 	g++ -isystem ${GTEST_DIR}/include -I ./src -I . $(CPP_EXCEPT_MAIN) $(NGINX_FILES) ${GTEST_DIR}/src/gtest_main.cc $(word 1, $^) $(word 2, $^) $(TEST_FLAGS) $(COMMON_FLAGS) $(BOOST_FLAGS) -o $@ 
