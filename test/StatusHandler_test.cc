@@ -13,5 +13,10 @@ TEST_F(StatusHandler_test,init_test){
 }
 
 TEST_F(StatusHandler_test,Handle_Request_test){
+	Response resp;
+	Request req;
+	string header = "GET / HTTP/1.1\r\n\r\n";
+	string body = "body";
+	NotFoundHandler handler_;
 	EXPECT_EQ(1,1);
 }
