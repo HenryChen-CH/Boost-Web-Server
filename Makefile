@@ -36,3 +36,5 @@ libgtest.a: $(GTEST_DIR)
 
 clean:
 	@rm -rf obj webserver *.o *.d *.a src/*.gcno src/*.gcda *.gcov *.gcno *.gcda
+
+print-%  : ; @echo $* = $($*)
