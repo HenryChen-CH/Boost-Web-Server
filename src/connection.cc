@@ -41,22 +41,22 @@ void connection::read() {
 }
 
 void connection::stop() {
-    socket_.close();
+    boost::system::error_code ignored_ec;
+    socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored_ec);
 }
 
 void connection::write() {
+    auto self(shared_from_this());
     boost::asio::async_write(socket_, boost::asio::buffer(raw_response),
-    [this](boost::system::error_code ec, std::size_t){
+    [this, self](boost::system::error_code ec, std::size_t){
         if (!ec) {
             BOOST_LOG_TRIVIAL(info) << "Successfully send response back to " << socket_.remote_endpoint().address().to_string() << "\n";
             BOOST_LOG_TRIVIAL(info) << "Response: \n";
             BOOST_LOG_TRIVIAL(info) << "---------Start---------: \n";
             BOOST_LOG_TRIVIAL(info) << raw_response;
             BOOST_LOG_TRIVIAL(info) << "----------End----------: \n";
-            boost::system::error_code ignored_ec;
             raw_response = "";
-            socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both,
-                             ignored_ec);
+            connection_manager_.stop(shared_from_this());
             BOOST_LOG_TRIVIAL(info) << "Shutdown socket " << socket_.remote_endpoint().address().to_string() << "\n";
             return;
         }

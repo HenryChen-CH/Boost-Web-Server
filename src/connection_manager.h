@@ -6,6 +6,7 @@
 #include <memory>
 #include "connection.h"
 #include "googletest/googletest/include/gtest/gtest_prod.h"
+#include <boost/log/trivial.hpp>
 
 class connection_manager {
 public:
