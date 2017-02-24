@@ -23,7 +23,7 @@ Compile:
 ```
 make
 ```
-
+Tips: When you just change one source file or very few files, you just need to remove the corresponding .o file, and compile again, it will greatly speed up compiling process.  
 Run:
 
 ```
