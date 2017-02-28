@@ -36,7 +36,7 @@ void connection::stop() {
     } catch (std::exception& e) {
         BOOST_LOG_TRIVIAL(error) << e.what() << "\n";
     }
-    
+
 }
 
 void connection::write() {
@@ -50,7 +50,7 @@ void connection::write() {
             BOOST_LOG_TRIVIAL(debug) << raw_response;
             BOOST_LOG_TRIVIAL(debug) << "----------End----------: \n";
             raw_response = "";
-            connection_manager_.stop(shared_from_this());
+            connection_manager_.stop(self);
             BOOST_LOG_TRIVIAL(info) << "Shutdown socket " << socket_.remote_endpoint().address().to_string() << "\n";
             return;
         }
