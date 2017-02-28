@@ -19,19 +19,19 @@ RequestHandler::Status ProxyHandler::Init(const std::string& uri_prefix,
 
     // Get remote host and post from config.
     if (config.statements_.size() >= 2) {
-    	for (auto const& statement: config.statements_) {
-    		std::vector<std::string> tokens = statement->tokens_;
-    		if (tokens.size() == 2) {
-    			if (tokens.at(0) == HOST_TOKEN) {
-    				host_ = tokens.at(1);
-    			}
-    			else if (tokens.at(0) == PORT_TOKEN) {
-    				port_ = tokens.at(1);
-    			}
-    		}
-    	}
-    	BOOST_LOG_TRIVIAL(info) << "Init ProxyHandler " << "host: " << host_ << ", port: " << port_ << "\n";
-    	return OK;
+        for (auto const& statement: config.statements_) {
+            std::vector<std::string> tokens = statement->tokens_;
+            if (tokens.size() == 2) {
+                if (tokens.at(0) == HOST_TOKEN) {
+                    host_ = tokens.at(1);
+                }
+                else if (tokens.at(0) == PORT_TOKEN) {
+                    port_ = tokens.at(1);
+                }
+            }
+        }
+        BOOST_LOG_TRIVIAL(info) << "Init ProxyHandler " << "host: " << host_ << ", port: " << port_ << "\n";
+        return OK;
     }
     BOOST_LOG_TRIVIAL(error) << "Init ProxyHandler: bad config\n";
     return NOT_ENOUGH_PARAM;
