@@ -84,7 +84,7 @@ std::string connection::longest_prefix_matching(std::vector<std::string>& uris, 
     for (std::string s: uris) {
         size_t n = uri.find(s);
         if (n == 0) {
-            if (uri.length() == s.length() || uri[s.length()] == '/') {
+            if (s == "/" || uri.length() == s.length() || uri[s.length()] == '/') {
                 if (s.length() > max) {
                     max = s.length();
                     res = s;
