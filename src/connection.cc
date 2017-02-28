@@ -40,10 +40,10 @@ void connection::write() {
     [this, self](boost::system::error_code ec, std::size_t){
         if (!ec) {
             BOOST_LOG_TRIVIAL(info) << "Successfully send response back to " << socket_.remote_endpoint().address().to_string() << "\n";
-            BOOST_LOG_TRIVIAL(info) << "Response: \n";
-            BOOST_LOG_TRIVIAL(info) << "---------Start---------: \n";
-            BOOST_LOG_TRIVIAL(info) << raw_response;
-            BOOST_LOG_TRIVIAL(info) << "----------End----------: \n";
+            BOOST_LOG_TRIVIAL(debug) << "Response: \n";
+            BOOST_LOG_TRIVIAL(debug) << "---------Start---------: \n";
+            BOOST_LOG_TRIVIAL(debug) << raw_response;
+            BOOST_LOG_TRIVIAL(debug) << "----------End----------: \n";
             raw_response = "";
             connection_manager_.stop(shared_from_this());
             BOOST_LOG_TRIVIAL(info) << "Shutdown socket " << socket_.remote_endpoint().address().to_string() << "\n";
@@ -86,7 +86,7 @@ std::string connection::longest_prefix_matching(std::vector<std::string>& uris, 
 
 void connection::process_request() {
     BOOST_LOG_TRIVIAL(info) << "Receive HTTP Packet from: " << socket_.remote_endpoint().address().to_string() << "\n";
-    BOOST_LOG_TRIVIAL(info) << raw_packet << "\n";
+    BOOST_LOG_TRIVIAL(debug) << raw_packet << "\n";
     request_ = std::move(Request::Parse(raw_packet));
     RequestHandler::Status status = router(request_->uri())->HandleRequest(*request_.get(), &response_);
     if (status != RequestHandler::OK) {
