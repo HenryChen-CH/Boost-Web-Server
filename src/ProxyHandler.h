@@ -5,6 +5,7 @@
 #include "gtest/gtest_prod.h"
 #include "nginx-configparser/config_parser.h"
 #include <boost/log/trivial.hpp>
+#include <boost/asio.hpp>
 
 class ProxyHandler : public RequestHandler {
 public:

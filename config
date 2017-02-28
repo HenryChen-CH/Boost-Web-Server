@@ -9,6 +9,6 @@ path /f/bar EchoHandler {}
 path /status StatusHandler {}
 
 path /proxy ProxyHandler {
-	host localhost;
+	host www.ucla.edu;
 	port 5678;
 }
