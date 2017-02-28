@@ -45,13 +45,12 @@ bool http_server::Init(NginxConfig& config)
     handler_mapping_[NOT_FOUND_HANDLER] = tmp;
 
     try {
-        boost::asio::ip::tcp::resolver resolver(io_service_);
-        boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve({"localhost", port});
-        acceptor_.open(endpoint.protocol());
+        int port_ = std::stoi(port);
+        boost::asio::ip::tcp::endpoint endpoint_(boost::asio::ip::tcp::v4(), port_);
+        acceptor_.open(endpoint_.protocol());
         acceptor_.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
-        acceptor_.bind(endpoint);
+        acceptor_.bind(endpoint_);
         acceptor_.listen();
-
         accept();
     } catch (const boost::system::system_error& error) {
         std::cout << error.what() << std::endl;
