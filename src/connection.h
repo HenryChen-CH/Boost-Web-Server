@@ -13,6 +13,7 @@
 #include "request_parser.h"
 #include <iostream>
 #include "StatusHandler.h"
+#include <boost/thread/thread.hpp>
 
 class connection_manager;
 
@@ -38,6 +39,7 @@ private:
     std::string raw_response = "";
 
     std::array<char, 1024> buffer_;
+    void process_request();
 };
 
 typedef std::shared_ptr<connection> connection_ptr;

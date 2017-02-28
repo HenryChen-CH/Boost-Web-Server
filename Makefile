@@ -1,4 +1,4 @@
-BOOST_FLAGS = -lboost_system -lboost_log_setup -lboost_log -DBOOST_LOG_DYN_LINK
+BOOST_FLAGS = -lboost_system -lboost_log_setup -lboost_log -lboost_thread -DBOOST_LOG_DYN_LINK
 TEST_FLAGS = -fprofile-arcs -ftest-coverage
 COMMON_FLAGS = -std=c++11 -pthread -g -Wall
 
