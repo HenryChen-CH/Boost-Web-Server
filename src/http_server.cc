@@ -28,7 +28,10 @@ bool http_server::Init(NginxConfig& config)
                 return false;
             }
             StatusHandler::LogHandler(statement->tokens_[1], statement->tokens_[2]);
-            tmp->Init(statement->tokens_[1], *statement->child_block_.get());
+            RequestHandler::Status status = tmp->Init(statement->tokens_[1], *statement->child_block_.get());
+            if (status != RequestHandler::OK) {
+                return false;
+            }
             BOOST_LOG_TRIVIAL(info) << statement->tokens_[1] << " " << statement->tokens_[2] << "\n";
             handler_mapping_[statement->tokens_[1]] = tmp;
         }

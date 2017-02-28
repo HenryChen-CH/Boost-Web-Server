@@ -19,7 +19,8 @@ public:
         OK = 0,
         NOT_FOUND = 1,
         NOT_ENOUGH_PARAM = 2, 
-        PROXY_FAILURE = 3
+        BAD_CONFIG = 3,
+        PROXY_FAILURE = 4
         // Define your status codes here.
     };
     static RequestHandler* CreateByName(const char* type);
