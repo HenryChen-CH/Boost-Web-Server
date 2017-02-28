@@ -17,7 +17,8 @@ public:
     enum Status {
         OK = 0,
         NOT_FOUND = 1,
-        NOT_ENOUGH_PARAM = 2
+        NOT_ENOUGH_PARAM = 2,
+        BAD_CONFIG = 3
         // Define your status codes here.
     };
     static RequestHandler* CreateByName(const char* type);
