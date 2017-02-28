@@ -14,6 +14,7 @@
 #include <iostream>
 #include "StatusHandler.h"
 #include <boost/thread/thread.hpp>
+#include <exception>
 
 class connection_manager;
 

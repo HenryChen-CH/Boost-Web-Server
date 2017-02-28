@@ -31,7 +31,12 @@ void connection::read() {
 
 void connection::stop() {
     boost::system::error_code ignored_ec;
-    socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored_ec);
+    try {
+        socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored_ec);
+    } catch (std::exception& e) {
+        BOOST_LOG_TRIVIAL(error) << e.what() << "\n";
+    }
+    
 }
 
 void connection::write() {
