@@ -17,3 +17,8 @@ path /ucla ProxyHandler {
 	host ucla.edu;
 	port 80;
 }
+
+path /proxytest ProxyHandler {
+	host localhost;
+	port 3001;
+}

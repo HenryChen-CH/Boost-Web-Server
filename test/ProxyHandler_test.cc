@@ -9,13 +9,13 @@ class ProxyHandler_test:public ::testing::Test{
 };
 
 TEST_F(ProxyHandler_test, init_test){
-	// NginxConfig config;
-	// const char* config_file="config";
-	// parser.Parse(config_file,&config);
-	// EchoHandler handler_;
-	// RequestHandler::Status status=handler_.Init("foo",config);
-	// EXPECT_EQ(handler_.uri_prefix_,"foo");
-	// EXPECT_EQ(status,0);
+	NginxConfig config;
+	const char* config_file="config";
+	parser.Parse(config_file,&config);
+	EchoHandler handler_;
+	RequestHandler::Status status=handler_.Init("foo",config);
+	EXPECT_EQ(handler_.uri_prefix_,"foo");
+	EXPECT_EQ(status,0);
 }
 
 TEST_F(ProxyHandler_test, handle_request_test){
