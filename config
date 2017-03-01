@@ -8,12 +8,12 @@ path /f/bar EchoHandler {}
 
 path /status StatusHandler {}
 
-path /proxy1 ProxyHandler {
-	host httpbin.org;
+path /example ProxyHandler {
+	host www.example.com;
 	port 80;
 }
 
-path /proxy2 ProxyHandler {
-	host www.ucla.edu;
+path /ucla ProxyHandler {
+	host ucla.edu;
 	port 80;
 }

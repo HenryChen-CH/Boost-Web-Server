@@ -9,6 +9,7 @@ public:
     enum ResponseCode {
         // Define your HTTP response codes here.
         ok = 200,
+        moved_permenantly = 301,
         found = 302,
         bad_request = 400,
         not_found = 404
@@ -19,7 +20,6 @@ public:
     void SetBody(const std::string& body);
     void SetVersion(const std::string& version);
     ResponseCode GetResponseCode();
-
     std::string ToString();
 
 private:

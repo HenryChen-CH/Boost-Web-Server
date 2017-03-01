@@ -1,4 +1,5 @@
 #include "ProxyHandler.h"
+#include <iostream>
 
 const std::string HOST_TOKEN = "host";
 const std::string PORT_TOKEN = "port";
@@ -6,6 +7,17 @@ const std::string PORT_TOKEN = "port";
 using boost::asio::ip::tcp;
 
 RequestHandler::Status ProxyHandler::HandleRequest(const Request& request,
+                     Response* response) {
+
+    Request r_request = request;
+    //Make initial request to server
+    std::string response_string = NewRequest(r_request, response);
+    Response::ResponseCode parse_status = ParseResponse(response_string, response);
+
+    return RequestHandler::OK;
+}
+
+std::string ProxyHandler::NewRequest(const Request& request,
                      Response* response) {
 
     // Get endpoints corresponding to the server name.
@@ -16,7 +28,7 @@ RequestHandler::Status ProxyHandler::HandleRequest(const Request& request,
     tcp::resolver::iterator endpoint_iterator = resolver.resolve(query, error), end;
     if (error) {
         BOOST_LOG_TRIVIAL(error) << "Unable to resolve host " << host_ << "and port " << port_ << "\n";
-        return RequestHandler::PROXY_FAILURE;
+        return "failure";
     }
 
     // Try each endpoint until we successfully establish a connection.
@@ -24,7 +36,7 @@ RequestHandler::Status ProxyHandler::HandleRequest(const Request& request,
     boost::asio::connect(socket, endpoint_iterator, end, error);
     if (error) {
         BOOST_LOG_TRIVIAL(error) << "Unable to bind socket. Host: " << host_ << "\n";
-        return RequestHandler::PROXY_FAILURE;
+        return "failure";
     }
 
     // Get request string and send it.
@@ -45,20 +57,18 @@ RequestHandler::Status ProxyHandler::HandleRequest(const Request& request,
         std::string new_data = std::string(boost::asio::buffers_begin(proxy_response.data()),
             boost::asio::buffers_begin(proxy_response.data()) + bytes_read);
         response_string += new_data;
+        std::cout << new_data;
+
         proxy_response.consume(bytes_read);
     }
     if (error != boost::asio::error::eof) {
         BOOST_LOG_TRIVIAL(error) << "Error reading HTTP response from server.\n";
-        return RequestHandler::PROXY_FAILURE;
+        return "failure";
     }
 
-    RequestHandler::Status parse_status = ParseResponse(response_string, response);
-    if (parse_status != RequestHandler::OK) {
-        BOOST_LOG_TRIVIAL(error) << "Response could not be parsed.\n";
-        return parse_status;
-    }
+    std::cout << response_string;
 
-    return RequestHandler::OK;
+    return response_string;
 }
 
 std::string ProxyHandler::GetRequestString(const std::string& uri) {
@@ -76,7 +86,7 @@ std::string ProxyHandler::GetRequestString(const std::string& uri) {
     return request_string;
 }
 
-RequestHandler::Status ProxyHandler::ParseResponse(std::string response_string, Response* response) {
+Response::ResponseCode ProxyHandler::ParseResponse(std::string response_string, Response* response) {
     int index;
     std::string header;
     std::string body;
@@ -90,7 +100,7 @@ RequestHandler::Status ProxyHandler::ParseResponse(std::string response_string, 
 
     if (index == std::string::npos || index + 4 > response_string.size()) {
         BOOST_LOG_TRIVIAL(error) << "Couldn't find end of header section in HTTP response.\n";
-        return RequestHandler::PROXY_FAILURE;
+        return Response::ResponseCode::bad_request;
     }
 
     header = response_string.substr(0, index);
@@ -101,7 +111,7 @@ RequestHandler::Status ProxyHandler::ParseResponse(std::string response_string, 
     index = header.find("\r\n");
     if (index == std::string::npos || index + 2 > header.size()) {
         BOOST_LOG_TRIVIAL(error) << "HTTP header poorly formed: " << header << "\n";
-        return RequestHandler::PROXY_FAILURE;
+        return Response::ResponseCode::bad_request;
     }
 
     first_line = header.substr(0, index);
@@ -126,6 +136,7 @@ RequestHandler::Status ProxyHandler::ParseResponse(std::string response_string, 
     while (index != std::string::npos && index < headers.size()) {
         line_end = headers.find("\r\n");
         header_line = headers.substr(0, line_end);
+        std::cout << header_line;
         colon_index = header_line.find(":");
         name = header_line.substr(0, colon_index);
         value = header_line.substr(colon_index + 2);
@@ -139,7 +150,7 @@ RequestHandler::Status ProxyHandler::ParseResponse(std::string response_string, 
     response->SetVersion(http_version);
     response->SetBody(body);
 
-    return RequestHandler::OK;
+    return Response::ResponseCode::found;
 }
 
 Response::ResponseCode ProxyHandler::GetStatusCode(const std::string& status_code_string) {
