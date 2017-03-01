@@ -28,7 +28,11 @@ test/%_test : test/%_test.cc libgtest.a src/%.cc
 test: $(TESTS) webserver
 	chmod a+x integration-test.py
 	./integration-test.py
+	./proxy-test.sh
 .PHONY: test
+
+proxy:
+	./proxy-test.sh
 
 libgtest.a: $(GTEST_DIR)
 	g++ -std=c++11 -isystem ${GTEST_DIR}/include -I${GTEST_DIR} -pthread -c ${GTEST_DIR}/src/gtest-all.cc
