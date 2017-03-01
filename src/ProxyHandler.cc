@@ -11,37 +11,27 @@ RequestHandler::Status ProxyHandler::HandleRequest(const Request& request,
     // Get endpoints corresponding to the server name.
     boost::asio::io_service io_service;
     tcp::resolver resolver(io_service);
-    tcp::resolver::query query(host_, "http");
-    boost::system::error_code ec;
-    tcp::resolver::iterator endpoint_iterator = resolver.resolve(query, ec), end;
-    if (ec) {
-        BOOST_LOG_TRIVIAL(error) << "Unable to resolve host.";
+    tcp::resolver::query query(host_, port_);
+    boost::system::error_code error;
+    tcp::resolver::iterator endpoint_iterator = resolver.resolve(query, error), end;
+    if (error) {
+        BOOST_LOG_TRIVIAL(error) << "Unable to resolve host " << host_ << "and port " << port_ << "\n";
         return RequestHandler::PROXY_FAILURE;
     }
 
     // Try each endpoint until we successfully establish a connection.
     tcp::socket socket(io_service);
-    boost::asio::connect(socket, endpoint_iterator, end, ec);
-    if (ec) {
+    boost::asio::connect(socket, endpoint_iterator, end, error);
+    if (error) {
         BOOST_LOG_TRIVIAL(error) << "Unable to bind socket. Host: " << host_ << "\n";
         return RequestHandler::PROXY_FAILURE;
     }
 
-    // Get requested path.
-    std::string file_path = "/";
-    if (request.uri().length() > uri_prefix_.length()) {
-        file_path = request.uri().substr(uri_prefix_.length());
-    }
-
-    // Form the request.
+    // Get request string and send it.
+    std::string request_string = GetRequestString(request.uri());
     boost::asio::streambuf proxy_request;
     std::ostream request_stream(&proxy_request);
-    request_stream << "GET " << file_path << " HTTP/1.1\r\n";
-    request_stream << "Host: " << host_ << "\r\n";
-    request_stream << "Accept: */*\r\n";
-    request_stream << "Connection: keep-alive\r\n\r\n";
-
-    // Send the request.
+    request_stream << request_string;
     boost::asio::write(socket, proxy_request);
     BOOST_LOG_TRIVIAL(info) << "Sending proxy HTTP request:\n" << &proxy_request << "\n\n";
 
@@ -85,7 +75,6 @@ RequestHandler::Status ProxyHandler::HandleRequest(const Request& request,
     }
 
     // Read until EOF, writing data to output as we go.
-    boost::system::error_code error;
     while (boost::asio::read(socket, proxy_response,
         boost::asio::transfer_at_least(1), error)) {
         response_output << &proxy_response;
@@ -100,6 +89,21 @@ RequestHandler::Status ProxyHandler::HandleRequest(const Request& request,
     response->SetBody(response_output.str());
 
     return RequestHandler::OK;
+}
+
+std::string ProxyHandler::GetRequestString(const std::string& uri) {
+    std::string request_string = "";
+    // Get requested path.
+    std::string file_path = "/";
+    if (uri.length() > uri_prefix_.length()) {
+        file_path = uri.substr(uri_prefix_.length());
+    }
+    // Form the request.
+    request_string += "GET " + file_path + " HTTP/1.1\r\n";
+    request_string += "Host: " + host_ + "\r\n";
+    request_string += "Accept: */*\r\n";
+    request_string += "Connection: keep-alive\r\n\r\n";
+    return request_string;
 }
 
 RequestHandler::Status ProxyHandler::Init(const std::string& uri_prefix,

@@ -10,5 +10,5 @@ path /status StatusHandler {}
 
 path /proxy ProxyHandler {
 	host www.ucla.edu;
-	port 5678;
+	port 80;
 }

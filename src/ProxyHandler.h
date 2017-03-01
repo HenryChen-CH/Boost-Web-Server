@@ -16,6 +16,10 @@ private:
     std::string uri_prefix_;
     std::string host_;
     std::string port_;
+
+    // Helper functions.
+    std::string GetRequestString(const std::string& uri);
+
     FRIEND_TEST(ProxyHandler_test,init_test);
 };
 
