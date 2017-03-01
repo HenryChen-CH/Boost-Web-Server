@@ -6,6 +6,7 @@
 #include "nginx-configparser/config_parser.h"
 #include <boost/log/trivial.hpp>
 #include <boost/asio.hpp>
+#include <boost/algorithm/string.hpp>
 
 class ProxyHandler : public RequestHandler {
 public:
@@ -19,6 +20,8 @@ private:
 
     // Helper functions.
     std::string GetRequestString(const std::string& uri);
+    Status ParseResponse(std::string response_string, Response* response);
+    Response::ResponseCode GetStatusCode(const std::string& status_code_string);
 
     FRIEND_TEST(ProxyHandler_test,init_test);
 };

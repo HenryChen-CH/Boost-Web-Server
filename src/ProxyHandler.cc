@@ -36,58 +36,23 @@ RequestHandler::Status ProxyHandler::HandleRequest(const Request& request,
     BOOST_LOG_TRIVIAL(info) << "Sending proxy HTTP request:\n" << &proxy_request << "\n\n";
 
     // Read the response.
+    std::string response_string;
     boost::asio::streambuf proxy_response;
-    boost::asio::read_until(socket, proxy_response, "\r\n");
-    std::istream response_stream(&proxy_response);
-    std::ostringstream response_output;
-
-    // Check the response.
-    std::string http_version;
-    response_stream >> http_version;
-    unsigned int status_code;
-    response_stream >> status_code;
-    std::string status_message;
-    std::getline(response_stream, status_message);
-    if (!response_stream || http_version.substr(0, 5) != "HTTP/") {
-        BOOST_LOG_TRIVIAL(error) << "Invalid HTTP response\n";
-        return RequestHandler::PROXY_FAILURE;
-    }
-    // TODO: handle HTTP redirect
-    if (status_code != 200) {
-        BOOST_LOG_TRIVIAL(info) << "Response returned with status code " << status_code << "\n";
-    }
-
-    // Read response headers.
-    boost::asio::read_until(socket, proxy_response, "\r\n\r\n");
-
-    // Process response headers.
-    std::string header;
-    std::size_t colon_loc;
-    while (std::getline(response_stream, header) && header != "\r") {
-        colon_loc = header.find(":");
-        response->AddHeader(header.substr(0, colon_loc), header.substr(colon_loc+1));
-        BOOST_LOG_TRIVIAL(info) << header << "\n";
-    }
-
-    // Write whatever content we already have to output.
-    if (proxy_response.size() > 0) {
-        response_output << &proxy_response;
-    }
-
-    // Read until EOF, writing data to output as we go.
-    while (boost::asio::read(socket, proxy_response,
-        boost::asio::transfer_at_least(1), error)) {
-        response_output << &proxy_response;
+    std::size_t bytes_read;
+    while ((bytes_read = boost::asio::read(socket, proxy_response,
+        boost::asio::transfer_at_least(1), error))) {
+        std::string new_data = std::string(boost::asio::buffers_begin(proxy_response.data()),
+            boost::asio::buffers_begin(proxy_response.data()) + bytes_read);
+        response_string += new_data;
+        proxy_response.consume(bytes_read);
     }
     if (error != boost::asio::error::eof) {
-        throw boost::system::system_error(error);
+        BOOST_LOG_TRIVIAL(error) << "Error reading HTTP response from server.\n";
+        return RequestHandler::PROXY_FAILURE;
     }
 
-    // Fill out response.
-    response->SetStatus(Response::ok);
-    response->SetVersion(http_version);
-    response->SetBody(response_output.str());
-
+    RequestHandler::Status parse_status = ParseResponse(response_string, response);
+    // TODO: do something with status
     return RequestHandler::OK;
 }
 
@@ -104,6 +69,86 @@ std::string ProxyHandler::GetRequestString(const std::string& uri) {
     request_string += "Accept: */*\r\n";
     request_string += "Connection: keep-alive\r\n\r\n";
     return request_string;
+}
+
+RequestHandler::Status ProxyHandler::ParseResponse(std::string response_string, Response* response) {
+    int index;
+    std::string header;
+    std::string body;
+    std::string first_line;
+    std::string headers;
+    std::string http_version = "";
+    std::string status_code = "";
+
+    // Split response into header and body section
+    index = response_string.find("\r\n\r\n");
+
+    if (index == std::string::npos || index + 4 > response_string.size()) {
+        BOOST_LOG_TRIVIAL(error) << "Couldn't find end of header section in HTTP response.\n";
+        return RequestHandler::PROXY_FAILURE;
+    }
+
+    header = response_string.substr(0, index);
+    BOOST_LOG_TRIVIAL(info) << "Header: \n" << header << "\n";
+    body = response_string.substr(index + 4);
+
+    // Split header section into first line and headers
+    index = header.find("\r\n");
+    if (index == std::string::npos || index + 2 > header.size()) {
+        BOOST_LOG_TRIVIAL(error) << "HTTP header poorly formed: " << header << "\n";
+        return RequestHandler::PROXY_FAILURE;
+    }
+
+    first_line = header.substr(0, index);
+    headers = header.substr(index + 2);
+
+    // Parse first line
+    index = first_line.find(" ");
+    http_version = first_line.substr(0, index);
+    BOOST_LOG_TRIVIAL(info) << "HTTP version: " << http_version << "\n";
+    first_line = first_line.substr(index + 1);
+    index = first_line.find(" ");
+    status_code = first_line.substr(0, index);
+    BOOST_LOG_TRIVIAL(info) << "Status code: " << status_code << "\n";
+
+    // Headers
+    std::string name;
+    std::string value;
+    std::string header_line;
+    int colon_index;
+    int line_end;
+    index = headers.find("\r\n");
+    while (index != std::string::npos && index < headers.size()) {
+        line_end = headers.find("\r\n");
+        header_line = headers.substr(0, line_end);
+        colon_index = header_line.find(":");
+        name = header_line.substr(0, colon_index);
+        value = header_line.substr(colon_index + 2);
+        response->AddHeader(name, value);
+        BOOST_LOG_TRIVIAL(info) << "HEADER " << name << ": " << value << "\n";
+        headers = headers.substr(index + 2);
+        index = headers.find("\r\n");
+    }
+
+    response->SetStatus(GetStatusCode(status_code));
+    response->SetVersion(http_version);
+    response->SetBody(body);
+
+    return RequestHandler::OK;
+}
+
+Response::ResponseCode ProxyHandler::GetStatusCode(const std::string& status_code_string) {
+    int status_code_int = stoi(status_code_string);
+    switch (status_code_int) {
+        case 200:
+            return Response::ok;
+        case 302:
+            return Response::found;
+        case 400:
+            return Response::bad_request;
+        default:
+            return Response::not_found;
+    }
 }
 
 RequestHandler::Status ProxyHandler::Init(const std::string& uri_prefix,
