@@ -28,12 +28,13 @@ RequestHandler::Status ProxyHandler::HandleRequest(const Request& request,
     }
 
     // Get request string and send it.
+    BOOST_LOG_TRIVIAL(info) << "Requested URI is " << request.uri() << "\n\n";
     std::string request_string = GetRequestString(request.uri());
     boost::asio::streambuf proxy_request;
     std::ostream request_stream(&proxy_request);
     request_stream << request_string;
     boost::asio::write(socket, proxy_request);
-    BOOST_LOG_TRIVIAL(info) << "Sending proxy HTTP request:\n" << &proxy_request << "\n\n";
+    BOOST_LOG_TRIVIAL(info) << "Sending proxy HTTP request:\n" << request_string << "\n\n";
 
     // Read the response.
     std::string response_string;
@@ -52,7 +53,11 @@ RequestHandler::Status ProxyHandler::HandleRequest(const Request& request,
     }
 
     RequestHandler::Status parse_status = ParseResponse(response_string, response);
-    // TODO: do something with status
+    if (parse_status != RequestHandler::OK) {
+        BOOST_LOG_TRIVIAL(error) << "Response could not be parsed.\n";
+        return parse_status;
+    }
+
     return RequestHandler::OK;
 }
 
@@ -65,7 +70,7 @@ std::string ProxyHandler::GetRequestString(const std::string& uri) {
     }
     // Form the request.
     request_string += "GET " + file_path + " HTTP/1.1\r\n";
-    request_string += "Host: " + host_ + "\r\n";
+    request_string += "Host: " + host_ + ":" + port_ + "\r\n";
     request_string += "Accept: */*\r\n";
     request_string += "Connection: keep-alive\r\n\r\n";
     return request_string;
