@@ -12,19 +12,31 @@ RequestHandler::Status ProxyHandler::HandleRequest(const Request& request,
     boost::asio::io_service io_service;
     tcp::resolver resolver(io_service);
     tcp::resolver::query query(host_, "http");
-    tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
+    boost::system::error_code ec;
+    tcp::resolver::iterator endpoint_iterator = resolver.resolve(query, ec), end;
+    if (ec) {
+        BOOST_LOG_TRIVIAL(error) << "Unable to resolve host.";
+        return RequestHandler::PROXY_FAILURE;
+    }
 
     // Try each endpoint until we successfully establish a connection.
     tcp::socket socket(io_service);
-    boost::asio::connect(socket, endpoint_iterator);
+    boost::asio::connect(socket, endpoint_iterator, end, ec);
+    if (ec) {
+        BOOST_LOG_TRIVIAL(error) << "Unable to bind socket. Host: " << host_ << "\n";
+        return RequestHandler::PROXY_FAILURE;
+    }
 
     // Get requested path.
-    std::string file_path = request.uri().substr(uri_prefix_.length());
+    std::string file_path = "/";
+    if (request.uri().length() > uri_prefix_.length()) {
+        file_path = request.uri().substr(uri_prefix_.length());
+    }
 
     // Form the request.
     boost::asio::streambuf proxy_request;
     std::ostream request_stream(&proxy_request);
-    request_stream << "GET / HTTP/1.1\r\n";
+    request_stream << "GET " << file_path << " HTTP/1.1\r\n";
     request_stream << "Host: " << host_ << "\r\n";
     request_stream << "Accept: */*\r\n";
     request_stream << "Connection: keep-alive\r\n\r\n";
