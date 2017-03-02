@@ -4,6 +4,7 @@ const std::string name_value_separator = ": ";
 const std::string crlf = "\r\n";
 
 const std::string ok_ = "OK";
+const std::string found_ = "Found";
 const std::string not_found_ = "Not Found";
 const std::string bad_request_ = "Bad Request";
 
@@ -50,6 +51,8 @@ std::string Response::to_string(ResponseCode status) {
     switch (status) {
         case ok:
             return ok_;
+        case found:
+            return found_;
         case not_found:
             return not_found_;
         default:

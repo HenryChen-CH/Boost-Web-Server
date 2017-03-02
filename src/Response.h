@@ -9,6 +9,7 @@ public:
     enum ResponseCode {
         // Define your HTTP response codes here.
         ok = 200,
+        found = 302,
         bad_request = 400,
         not_found = 404
     };
