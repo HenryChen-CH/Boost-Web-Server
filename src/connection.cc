@@ -86,6 +86,15 @@ std::string connection::longest_prefix_matching(std::vector<std::string>& uris, 
             }
         }
     }
+    // If we haven't found a match and one of the URI prefixes is
+    // the root directory, set it to that.
+    if (res == "") {
+        for (std::string prefix : uris) {
+            if (prefix == "/") {
+                res = prefix;
+            }
+        }
+    }
     return res;
 }
 
