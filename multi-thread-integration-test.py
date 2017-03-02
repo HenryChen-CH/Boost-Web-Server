@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from subprocess import call, Popen
-import requests, os, httplib
+import requests, os, httplib, sys
 from time import sleep
 
 port = 3000
@@ -20,44 +20,57 @@ patch_send()
 
 print "Multi Thread Test Start"
 
-server = Popen(['./webserver', 'config'], stdout=FNULL)
-sleep(0.1)
-telnet_proc = Popen(["telnet", "localhost", "3000"], stdout=FNULL)
+def main(argv=sys.argv): 
+    server = Popen(['./webserver', 'config'], stdout=FNULL)
+    sleep(0.1)
+    num_of_thread = 2
+    telnet_procs = []
+    if len(argv) == 2:
+        num_of_thread = int(argv[1])
+    print "run telnet processes num: " + str(num_of_thread)
+    for i in range(num_of_thread):
+        telnet_procs.append(Popen(["telnet", "localhost", "3000"], stdout=FNULL))
 
-headers = {'content-type': 'text/plain'}
-r = requests.get('http://localhost:3000/f/temp.txt', headers=headers)
+    headers = {'content-type': 'text/plain'}
+    r = requests.get('http://localhost:3000/f/temp.txt', headers=headers)
 
-file_content = "something"
-if r.status_code == requests.codes.ok:
-    if r.headers['content-type'] != "text/plain":
-        print "Test fail"
-        print "actual content-type is: " + r.headers['content-type']
-        print "expected content-type is: "+ "text/plain"
+    file_content = "something"
+    if r.status_code == requests.codes.ok:
+        if r.headers['content-type'] != "text/plain":
+            print "Test fail"
+            print "actual content-type is: " + r.headers['content-type']
+            print "expected content-type is: "+ "text/plain"
+            server.kill()
+            for proc in telnet_procs:
+                proc.kill()
+            exit(1);
+
+        if r.content != file_content:
+            print "Test fail"
+            print "Request: "
+            print file_content
+            print "Response content: "
+            print r.content
+            server.kill()
+            for proc in telnet_procs:
+                proc.kill()
+            exit(1)
+    else:
+        print "status code not 200, test fail"
         server.kill()
-        telnet_proc.kill()
-        exit(1);
-
-    if r.content != file_content:
-        print "Test fail"
-        print "Request: "
-        print file_content
-        print "Response content: "
-        print r.content
-        server.kill()
-        telnet_proc.kill()
+        for proc in telnet_procs:
+            proc.kill()
         exit(1)
-else:
-    print "status code not 200, test fail"
+
+    print "Multi Thread Test pass!"
+
     server.kill()
-    telnet_proc.kill()
-    exit(1)
+    for proc in telnet_procs:
+        proc.kill()
+    exit(0)
 
-print "Multi Thread Test pass!"
-
-server.kill()
-telnet_proc.kill()
-exit(0)
-
+if __name__ == "__main__":
+    main()
 
 # multithread test
 
