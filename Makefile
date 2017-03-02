@@ -1,4 +1,4 @@
-BOOST_FLAGS = -lboost_system -lboost_log_setup -lboost_log -DBOOST_LOG_DYN_LINK
+BOOST_FLAGS = -lboost_system -lboost_log_setup -lboost_log -lboost_thread -DBOOST_LOG_DYN_LINK
 TEST_FLAGS = -fprofile-arcs -ftest-coverage
 COMMON_FLAGS = -std=c++11 -pthread -g -Wall
 
@@ -28,6 +28,8 @@ test/%_test : test/%_test.cc libgtest.a src/%.cc
 test: $(TESTS) webserver
 	chmod a+x integration-test.py
 	./integration-test.py
+	chmod a+x multi_thread_integration_test.py
+	./multi-thread-integration-test.py
 .PHONY: test
 
 libgtest.a: $(GTEST_DIR)

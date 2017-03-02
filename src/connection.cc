@@ -19,18 +19,7 @@ void connection::read() {
         if (!ec) {
             result_type result = request_parser_.parse(raw_packet, buffer_.data(), buffer_.data()+bytes_transferred);
             if (result == good) {
-                BOOST_LOG_TRIVIAL(info) << "Receive HTTP Packet from: " << socket_.remote_endpoint().address().to_string() << "\n";
-                BOOST_LOG_TRIVIAL(info) << raw_packet << "\n";
-                request_ = std::move(Request::Parse(raw_packet));
-                RequestHandler::Status status = router(request_->uri())->HandleRequest(*request_.get(), &response_);
-                if (status != RequestHandler::OK) {
-                    handler_mapping_[NOT_FOUND_HANDLER]->HandleRequest(*request_.get(), &response_);
-                }
-                StatusHandler::LogRequest(request_->uri(), response_.GetResponseCode());
-                BOOST_LOG_TRIVIAL(info) << "Log Into StatusHandler uri: " << request_->uri() \
-                    << " response code: " <<  response_.GetResponseCode() << "\n";
-                raw_response = response_.ToString();
-                write();
+                std::unique_ptr<boost::thread>(new boost::thread(boost::bind(&connection::process_request, this)));
             } else {
                 read();
             }
@@ -42,7 +31,12 @@ void connection::read() {
 
 void connection::stop() {
     boost::system::error_code ignored_ec;
-    socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored_ec);
+    try {
+        socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored_ec);
+    } catch (std::exception& e) {
+        BOOST_LOG_TRIVIAL(error) << e.what() << "\n";
+    }
+
 }
 
 void connection::write() {
@@ -51,12 +45,12 @@ void connection::write() {
     [this, self](boost::system::error_code ec, std::size_t){
         if (!ec) {
             BOOST_LOG_TRIVIAL(info) << "Successfully send response back to " << socket_.remote_endpoint().address().to_string() << "\n";
-            BOOST_LOG_TRIVIAL(info) << "Response: \n";
-            BOOST_LOG_TRIVIAL(info) << "---------Start---------: \n";
-            BOOST_LOG_TRIVIAL(info) << raw_response;
-            BOOST_LOG_TRIVIAL(info) << "----------End----------: \n";
+            BOOST_LOG_TRIVIAL(debug) << "Response: \n";
+            BOOST_LOG_TRIVIAL(debug) << "---------Start---------: \n";
+            BOOST_LOG_TRIVIAL(debug) << raw_response;
+            BOOST_LOG_TRIVIAL(debug) << "----------End----------: \n";
             raw_response = "";
-            connection_manager_.stop(shared_from_this());
+            connection_manager_.stop(self);
             BOOST_LOG_TRIVIAL(info) << "Shutdown socket " << socket_.remote_endpoint().address().to_string() << "\n";
             return;
         }
@@ -94,3 +88,18 @@ std::string connection::longest_prefix_matching(std::vector<std::string>& uris, 
     }
     return res;
 }
+
+void connection::process_request() {
+    BOOST_LOG_TRIVIAL(info) << "Receive HTTP Packet from: " << socket_.remote_endpoint().address().to_string() << "\n";
+    BOOST_LOG_TRIVIAL(debug) << raw_packet << "\n";
+    request_ = std::move(Request::Parse(raw_packet));
+    RequestHandler::Status status = router(request_->uri())->HandleRequest(*request_.get(), &response_);
+    if (status != RequestHandler::OK) {
+        handler_mapping_[NOT_FOUND_HANDLER]->HandleRequest(*request_.get(), &response_);
+    }
+    StatusHandler::LogRequest(request_->uri(), response_.GetResponseCode());
+    BOOST_LOG_TRIVIAL(info) << "Log Into StatusHandler uri: " << request_->uri() \
+                        << " response code: " <<  response_.GetResponseCode() << "\n";
+    raw_response = response_.ToString();
+    write();
+};
