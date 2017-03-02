@@ -30,7 +30,7 @@ test: $(TESTS) webserver
 	./integration-test.py
 	chmod a+x multi_thread_integration_test.py
 	./multi-thread-integration-test.py
-  ./proxy-test.sh
+	./proxy-test.sh
 .PHONY: test
 
 proxy:
