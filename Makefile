@@ -28,6 +28,8 @@ test/%_test : test/%_test.cc libgtest.a src/%.cc
 test: $(TESTS) webserver
 	chmod a+x integration-test.py
 	./integration-test.py
+	chmod a+x multi_thread_integration_test.py
+	./multi-thread-integration-test.py
 .PHONY: test
 
 libgtest.a: $(GTEST_DIR)
