@@ -11,6 +11,8 @@
 class ProxyHandler : public RequestHandler {
 public:
     Status HandleRequest(const Request& request, Response* response);
+    std::string NewRequest(const Request& request,
+                     Response* response);
     Status Init(const std::string& uri_prefix, const NginxConfig& config);
 
 private:
@@ -20,7 +22,7 @@ private:
 
     // Helper functions.
     std::string GetRequestString(const std::string& uri);
-    Status ParseResponse(std::string response_string, Response* response);
+    Response::ResponseCode ParseResponse(std::string response_string, Response* response);
     Response::ResponseCode GetStatusCode(const std::string& status_code_string);
 
     FRIEND_TEST(ProxyHandler_test,init_test);
