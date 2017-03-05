@@ -11,6 +11,7 @@
 #include "RequestHandler.h"
 #include "googletest/googletest/include/gtest/gtest_prod.h"
 #include "StatusHandler.h"
+#include <exception>
 
 
 class http_server {

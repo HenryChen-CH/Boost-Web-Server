@@ -51,7 +51,6 @@ void connection::write() {
             BOOST_LOG_TRIVIAL(debug) << "----------End----------: \n";
             raw_response = "";
             connection_manager_.stop(self);
-            BOOST_LOG_TRIVIAL(info) << "Shutdown socket " << socket_.remote_endpoint().address().to_string() << "\n";
             return;
         }
         BOOST_LOG_TRIVIAL(error) << "Send response failed \n";

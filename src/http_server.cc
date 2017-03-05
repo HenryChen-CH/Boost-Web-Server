@@ -76,7 +76,12 @@ void http_server::accept() {
 }
 
 void http_server::start() {
-    io_service_.run();
+    try {
+        io_service_.run();
+    } catch (std::exception& e) {
+        BOOST_LOG_TRIVIAL(error) << e.what() << "\n";
+        io_service_.run();
+    }
 }
 
 void http_server::stop() {
