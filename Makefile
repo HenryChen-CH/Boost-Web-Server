@@ -43,4 +43,10 @@ libgtest.a: $(GTEST_DIR)
 clean:
 	@rm -rf obj webserver *.o *.d *.a src/*.gcno src/*.gcda *.gcov *.gcno *.gcda
 
+docker-build:
+	docker build -t httpserver .
+
+docker-run: docker-build
+	docker run --rm -t -p 3000:3000 httpserver
+
 print-%  : ; @echo $* = $($*)
