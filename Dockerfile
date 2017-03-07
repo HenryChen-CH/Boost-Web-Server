@@ -8,5 +8,4 @@ WORKDIR /opt/webserver
 COPY . /opt/webserver
 RUN make clean && make webserver
 
-EXPOSE 3000:3000
-CMD ["./webserver", "config"]
+CMD tar -cf - webserver
