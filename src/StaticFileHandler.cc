@@ -4,21 +4,26 @@ const std::string PathToken_ = "root";
 
 RequestHandler::Status StaticFileHandler::HandleRequest(const Request& request,
                      Response* response) {
-    std::string file_path = root_+request.uri().substr(uri_prefix_.length());
-    std::ifstream file(file_path, std::ios::binary);
+    try {
+        std::string file_path = root_+request.uri().substr(uri_prefix_.length());
+        std::ifstream file(file_path, std::ios::binary);
 
-    if (!file.good()) {
-        BOOST_LOG_TRIVIAL(error) << "StaticFileHandler file not found: " << file_path << "\n";
+        if (!file.good()) {
+            BOOST_LOG_TRIVIAL(error) << "StaticFileHandler file not found: " << file_path << "\n";
+            return NOT_FOUND;
+        }
+        BOOST_LOG_TRIVIAL(info) << "StaticFileHandler is serving file: " << file_path << "\n";
+        response->SetVersion("HTTP/1.0");
+        response->SetStatus(Response::ok);
+        std::string file_name = file_name_from_path(file_path);
+        response->AddHeader(header_content_type_, mime_types::extension_to_type(extension(file_name)));
+        std::string body((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+        response->SetBody(body);
+        return OK;
+    } catch(std::exception& e) {
+        BOOST_LOG_TRIVIAL(error) << "static file handler fail. " << e.what() << "\n";
         return NOT_FOUND;
     }
-    BOOST_LOG_TRIVIAL(info) << "StaticFileHandler is serving file: " << file_path << "\n";
-    response->SetVersion("HTTP/1.0");
-    response->SetStatus(Response::ok);
-    std::string file_name = file_name_from_path(file_path);
-    response->AddHeader(header_content_type_, mime_types::extension_to_type(extension(file_name)));
-    std::string body((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-    response->SetBody(body);
-    return OK;
 }
 
 RequestHandler::Status StaticFileHandler::Init(const std::string& uri_prefix,
