@@ -1,24 +1,28 @@
-BOOST_FLAGS = -lboost_system -lboost_log_setup -lboost_log -lboost_thread -DBOOST_LOG_DYN_LINK
+BOOST_FLAGS = -lboost_log_setup -lboost_log -lboost_thread -lboost_system -DBOOST_LOG_DYN_LINK
 TEST_FLAGS = -fprofile-arcs -ftest-coverage
 COMMON_FLAGS = -std=c++11 -pthread -g -Wall
 
 GTEST_DIR = googletest/googletest
 CPP_FILES = $(wildcard ./src/*.cc)
 OBJ_FILES := $(notdir $(CPP_FILES:.cc=.o))
-NGINX_FILES= nginx-configparser/config_parser.cc
+NGINX_FILE= nginx-configparser/config_parser.cc
+NGINX_OBJ= nginx-configparser/config_parser.o
 TEST_FILES = $(wildcard ./test/*_test.cc)
 TESTS = $(TEST_FILES:%.cc=%)
 CPP_EXCEPT_MAIN = $(filter-out ./src/webserver_main.cc, $(CPP_FILES))
 
-webserver: $(OBJ_FILES) $(NGINX_FILES)
+webserver: $(OBJ_FILES) $(NGINX_OBJ)
 	g++ $(COMMON_FLAGS) $^ $(BOOST_FLAGS) -o $@
 .PHONY: webserver
 
-%.o: src/%.cc $(NGINX_FILES)
+nginx-configparser/config_parser.o: $(NGINX_FILE)
+	g++ -std=c++11 -g $(BOOST_FLAGS) -I ${GTEST_DIR}/include -I . -c -o $@ $<
+
+%.o: src/%.cc
 	g++ -std=c++11 -g $(BOOST_FLAGS) -I ${GTEST_DIR}/include -I . -c -o $@ $<
 
 test/%_test : test/%_test.cc libgtest.a src/%.cc
-	g++ -isystem ${GTEST_DIR}/include -I ./src -I . $(CPP_EXCEPT_MAIN) $(NGINX_FILES) ${GTEST_DIR}/src/gtest_main.cc $(word 1, $^) $(word 2, $^) $(TEST_FLAGS) $(COMMON_FLAGS) $(BOOST_FLAGS) -o $@ 
+	g++ -isystem ${GTEST_DIR}/include -I ./src -I . $(CPP_EXCEPT_MAIN) $(NGINX_FILE) ${GTEST_DIR}/src/gtest_main.cc $(word 1, $^) $(word 2, $^) $(TEST_FLAGS) $(COMMON_FLAGS) $(BOOST_FLAGS) -o $@ 
 	$@
 	rm $@
 	@mv *.gcno src/
