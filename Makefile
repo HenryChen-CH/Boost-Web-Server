@@ -50,6 +50,8 @@ clean:
 docker-build:
 	docker build -t httpserver.build .
 	docker run httpserver.build > ./deploy/binary.tar
+	tar -xzvf ./deploy/binary.tar -C ./deploy
+	rm ./deploy/binary.tar
 	docker build -t httpserver deploy
 
 print-%  : ; @echo $* = $($*)
