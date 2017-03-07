@@ -12,7 +12,7 @@ TESTS = $(TEST_FILES:%.cc=%)
 CPP_EXCEPT_MAIN = $(filter-out ./src/webserver_main.cc, $(CPP_FILES))
 
 webserver: $(OBJ_FILES) $(NGINX_OBJ)
-	g++ $(COMMON_FLAGS) $^ $(BOOST_FLAGS) -o $@
+	g++ -static-libgcc -static-libstdc++ $(COMMON_FLAGS)  $^ $(BOOST_FLAGS) -Wl,-Bstatic -o $@
 .PHONY: webserver
 
 nginx-configparser/config_parser.o: $(NGINX_FILE)
