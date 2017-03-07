@@ -54,4 +54,12 @@ docker-build:
 	rm ./deploy/binary.tar
 	docker build -t httpserver deploy
 
+docker-deploy: docker-build
+	docker save -o ./httpserver.tar httpserver
+	scp -i ~/Downloads/cs130.pem ./httpserver.tar ubuntu@ec2-52-37-96-79.us-west-2.compute.amazonaws.com:~
+	rm ./httpserver.tar
+	ssh -i "~/Downloads/cs130.pem" ubuntu@ec2-52-37-96-79.us-west-2.compute.amazonaws.com \
+	-t 'docker stop $(docker ps -a -q); docker load -i httpserver.tar; docker run -d -t -p 3000:3000 httpserver; exit'
+.PHONY:docker-deploy
+
 print-%  : ; @echo $* = $($*)
