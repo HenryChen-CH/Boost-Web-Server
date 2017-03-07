@@ -10,6 +10,7 @@ NGINX_OBJ= nginx-configparser/config_parser.o
 TEST_FILES = $(wildcard ./test/*_test.cc)
 TESTS = $(TEST_FILES:%.cc=%)
 CPP_EXCEPT_MAIN = $(filter-out ./src/webserver_main.cc, $(CPP_FILES))
+AWS_KEY = ~/Downloads/cs130.pem
 
 webserver: $(OBJ_FILES) $(NGINX_OBJ)
 	$(CXX) -o $@ $^ -static-libgcc -static-libstdc++ $(COMMON_FLAGS) -Wl,-Bstatic $(BOOST_FLAGS) 
@@ -54,12 +55,12 @@ docker-build:
 	rm ./deploy/binary.tar
 	docker build -t httpserver deploy
 
-docker-deploy: docker-build
+docker-deploy: $(AWS_KEY)
 	docker save -o ./httpserver.tar httpserver
-	scp -i ~/Downloads/cs130.pem ./httpserver.tar ubuntu@ec2-52-37-96-79.us-west-2.compute.amazonaws.com:~
+	scp -i $(AWS_KEY) ./httpserver.tar ubuntu@ec2-52-37-96-79.us-west-2.compute.amazonaws.com:~
 	rm ./httpserver.tar
-	ssh -i "~/Downloads/cs130.pem" ubuntu@ec2-52-37-96-79.us-west-2.compute.amazonaws.com \
-	-t 'docker stop $(docker ps -a -q); docker load -i httpserver.tar; docker run -d -t -p 3000:3000 httpserver; exit'
-.PHONY:docker-deploy
+	ssh -i $(AWS_KEY) ubuntu@ec2-52-37-96-79.us-west-2.compute.amazonaws.com \
+	-t 'docker stop $$(docker ps -a -q); docker load -i httpserver.tar; docker run -d -t -p 3000:3000 httpserver; exit'
+.PHONY: docker-deploy
 
 print-%  : ; @echo $* = $($*)
