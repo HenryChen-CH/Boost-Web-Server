@@ -1,0 +1,19 @@
+listen 3000;
+
+path /f StaticFileHandler {
+  root ./foo/bar;
+}
+
+path /f/bar EchoHandler {}
+
+path /status StatusHandler {}
+
+path /example ProxyHandler {
+	host www.example.com;
+	port 80;
+}
+
+path /ucla ProxyHandler {
+	host ucla.edu;
+	port 80;
+}

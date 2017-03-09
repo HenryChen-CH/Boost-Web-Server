@@ -8,6 +8,7 @@
 #include <streambuf>
 #include <boost/log/trivial.hpp>
 #include <gtest/gtest_prod.h>
+#include <exception>
 
 class StaticFileHandler : public RequestHandler{
 public:
