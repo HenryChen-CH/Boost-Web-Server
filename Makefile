@@ -52,7 +52,8 @@ libgtest.a: $(GTEST_DIR)
 	ar -rv libgtest.a gtest-all.o
 
 clean:
-	@rm -rf obj webserver *.o *.d *.a src/*.gcno src/*.gcda *.gcov *.gcno *.gcda src/*.o cpp-markdown/src/*.o
+	@find . -name \*.o -name \*.gcov -name \*.gcno -name \*.gcda -delete
+	@rm -rf webserver *.d *.a
 
 docker-build:
 	docker build -t httpserver.build .
