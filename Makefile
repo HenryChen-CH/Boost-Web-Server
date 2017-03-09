@@ -1,25 +1,31 @@
-BOOST_FLAGS = -lboost_log_setup -lboost_log -lboost_thread -lboost_system
+BOOST_FLAGS = -lboost_log_setup -lboost_log -lboost_thread -lboost_system -lboost_regex 
 TEST_FLAGS = -fprofile-arcs -ftest-coverage
 COMMON_FLAGS = -lpthread
 
 GTEST_DIR = googletest/googletest
 CPP_FILES = $(wildcard ./src/*.cc)
-OBJ_FILES := $(notdir $(CPP_FILES:.cc=.o))
+OBJ_FILES := $(CPP_FILES:.cc=.o)
 NGINX_FILE= nginx-configparser/config_parser.cc
 NGINX_OBJ= nginx-configparser/config_parser.o
+MARKDOWN_SOURCE = cpp-markdown/src/markdown-tokens.cpp cpp-markdown/src/markdown.cpp
+MARKDOWN_OBJ = $(patsubst %.cpp, %.o, $(MARKDOWN_SOURCE))
+
 TEST_FILES = $(wildcard ./test/*_test.cc)
 TESTS = $(TEST_FILES:%.cc=%)
 CPP_EXCEPT_MAIN = $(filter-out ./src/webserver_main.cc, $(CPP_FILES))
 AWS_KEY = ~/Downloads/cs130.pem
 
-webserver: $(OBJ_FILES) $(NGINX_OBJ)
+webserver: $(OBJ_FILES) $(NGINX_OBJ) $(MARKDOWN_OBJ)
 	$(CXX) -o $@ $^ -static-libgcc -static-libstdc++ $(COMMON_FLAGS) -Wl,-Bstatic $(BOOST_FLAGS) 
 .PHONY: webserver
+
+cpp-markdown/src/%.o: cpp-markdown/src/%.cpp
+	g++ -std=c++11 $^ -c -o $@
 
 nginx-configparser/config_parser.o: $(NGINX_FILE)
 	g++ -std=c++11 -g -I ${GTEST_DIR}/include -I . -c -BOOST_ALL_DYN_LINK -o $@ $<
 
-%.o: src/%.cc
+src/%.o: src/%.cc
 	g++ -std=c++11 -g -I ${GTEST_DIR}/include -I . -c -BOOST_ALL_DYN_LINK -o $@ $<
 
 test/%_test : test/%_test.cc libgtest.a src/%.cc
@@ -46,7 +52,7 @@ libgtest.a: $(GTEST_DIR)
 	ar -rv libgtest.a gtest-all.o
 
 clean:
-	@rm -rf obj webserver *.o *.d *.a src/*.gcno src/*.gcda *.gcov *.gcno *.gcda
+	@rm -rf obj webserver *.o *.d *.a src/*.gcno src/*.gcda *.gcov *.gcno *.gcda src/*.o cpp-markdown/src/*.o
 
 docker-build:
 	docker build -t httpserver.build .

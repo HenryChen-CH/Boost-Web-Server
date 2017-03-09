@@ -16,9 +16,14 @@ RequestHandler::Status StaticFileHandler::HandleRequest(const Request& request,
         response->SetVersion("HTTP/1.1");
         response->SetStatus(Response::ok);
         std::string file_name = file_name_from_path(file_path);
-        response->AddHeader(header_content_type_, mime_types::extension_to_type(extension(file_name)));
-        std::string body((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-        response->SetBody(body);
+        if (extension(file_name) == "md") {
+            response->AddHeader(header_content_type_, "text/html");
+            response->SetBody(markdown_to_html(file_path));
+        } else {
+            response->AddHeader(header_content_type_, mime_types::extension_to_type(extension(file_name)));
+            std::string body((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            response->SetBody(body);
+        }
         return OK;
     } catch(std::exception& e) {
         BOOST_LOG_TRIVIAL(error) << "static file handler fail. " << e.what() << "\n";
@@ -55,4 +60,15 @@ std::string StaticFileHandler::extension(std::string file) const {
         return "";
     }
     return file.substr(n+1);
+}
+
+std::string StaticFileHandler::markdown_to_html(std::string md_file) {
+    markdown::Document doc;
+    if (doc.read(md_file)) {
+        std::ostringstream md;
+        doc.write(md);
+        return md.str();
+    } else {
+        return "";
+    }
 }
