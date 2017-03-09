@@ -25,7 +25,7 @@ private:
 
     std::string file_name_from_path(std::string file_path) const;
     std::string extension(std::string file) const;
-    std::string markdown_to_html(std::string md_file);
+    std::string markdown_to_html(std::ifstream& md_file);
     FRIEND_TEST(StaticFileHandler_test,all_test);
 };
 

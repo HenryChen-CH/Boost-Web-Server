@@ -18,7 +18,7 @@ RequestHandler::Status StaticFileHandler::HandleRequest(const Request& request,
         std::string file_name = file_name_from_path(file_path);
         if (extension(file_name) == "md") {
             response->AddHeader(header_content_type_, "text/html");
-            response->SetBody(markdown_to_html(file_path));
+            response->SetBody(markdown_to_html(file));
         } else {
             response->AddHeader(header_content_type_, mime_types::extension_to_type(extension(file_name)));
             std::string body((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
@@ -62,7 +62,7 @@ std::string StaticFileHandler::extension(std::string file) const {
     return file.substr(n+1);
 }
 
-std::string StaticFileHandler::markdown_to_html(std::string md_file) {
+std::string StaticFileHandler::markdown_to_html(std::ifstream& md_file) {
     markdown::Document doc;
     if (doc.read(md_file)) {
         std::ostringstream md;
