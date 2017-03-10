@@ -11,7 +11,7 @@ RequestHandler::Status StatusHandler::Init(const std::string& uri_prefix, const 
 
 RequestHandler::Status StatusHandler::HandleRequest(const Request& request, Response* response) {
     response->SetStatus(Response::ok);
-    response->SetVersion("HTTP/1.0");
+    response->SetVersion("HTTP/1.1");
     response->AddHeader(header_content_type_, "text/html");
     std::lock_guard<std::mutex> lock(request_mutex_);
     std::map<Response::ResponseCode ,int> response_code_;

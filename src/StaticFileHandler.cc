@@ -13,7 +13,7 @@ RequestHandler::Status StaticFileHandler::HandleRequest(const Request& request,
             return NOT_FOUND;
         }
         BOOST_LOG_TRIVIAL(info) << "StaticFileHandler is serving file: " << file_path << "\n";
-        response->SetVersion("HTTP/1.0");
+        response->SetVersion("HTTP/1.1");
         response->SetStatus(Response::ok);
         std::string file_name = file_name_from_path(file_path);
         response->AddHeader(header_content_type_, mime_types::extension_to_type(extension(file_name)));
