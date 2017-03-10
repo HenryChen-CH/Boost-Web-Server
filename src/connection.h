@@ -10,7 +10,6 @@
 #include "RequestHandler.h"
 #include "Request.h"
 #include "Response.h"
-#include "request_parser.h"
 #include <iostream>
 #include "StatusHandler.h"
 #include <boost/thread/thread.hpp>
@@ -28,18 +27,18 @@ public:
 private:
     void read();
     void write();
+    void read_body();
     RequestHandler* router(std::string url);
 
     boost::asio::ip::tcp::socket socket_;
     connection_manager& connection_manager_;
     std::map<std::string, RequestHandler*> handler_mapping_;
-    request_parser request_parser_;
     std::unique_ptr<Request> request_;
     Response response_;
-    std::string raw_packet = "";
     std::string raw_response = "";
 
     std::array<char, 1024> buffer_;
+    boost::asio::streambuf bufstream_;
     void process_request();
 };
 
