@@ -3,7 +3,7 @@
 RequestHandler::Status EchoHandler::HandleRequest(const Request& request,
                      Response* response) {
     response->SetStatus(Response::ok);
-    response->SetVersion("HTTP/1.0");
+    response->SetVersion("HTTP/1.1");
     response->AddHeader("Content-Type", "text/plain");
     response->SetBody(request.raw_request());
 

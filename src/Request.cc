@@ -3,6 +3,7 @@
 const std::string header_body_separator = "\r\n\r\n";
 const std::string header_line_separator = "\r\n";
 
+// parse packet, the packet must contains "\r\n\r\n"
 std::unique_ptr<Request> Request::Parse(const std::string& raw_request) {
     auto request_ = std::unique_ptr<Request>(new Request());
     request_->raw_ = raw_request;
@@ -37,6 +38,21 @@ std::unique_ptr<Request> Request::Parse(const std::string& raw_request) {
     }
 
     return request_;
+}
+
+// append body to existing body
+void Request::AppendBody(std::string body) {
+    body_ += body;
+    raw_ += body;
+}
+
+std::string Request::GetHeader(std::string name) {
+    for (auto const& header: headers_) {
+        if (header.first == name) {
+            return header.second;
+        }
+    }
+    return "";
 }
 
 std::string Request::raw_request() const {

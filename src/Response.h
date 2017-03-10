@@ -19,6 +19,7 @@ public:
     void AddHeader(const std::string& header_name, const std::string& header_value);
     void SetBody(const std::string& body);
     void SetVersion(const std::string& version);
+    std::string GetVersion();
     ResponseCode GetResponseCode();
     std::string ToString();
 

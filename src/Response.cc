@@ -63,3 +63,7 @@ std::string Response::to_string(ResponseCode status) {
 Response::ResponseCode Response::GetResponseCode() {
     return response_code_;
 }
+
+std::string Response::GetVersion() {
+    return version_;
+}
