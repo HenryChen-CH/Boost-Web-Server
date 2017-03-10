@@ -78,7 +78,7 @@ void connection::write() {
             BOOST_LOG_TRIVIAL(debug) << "----------End----------: \n";
             raw_response = "";
             BOOST_LOG_TRIVIAL(debug) << "Connection: " << request_->GetHeader(connection_) << "\n";
-            if (request_->GetHeader(connection_) != keep_alive_) {
+            if (request_->GetHeader(connection_) != keep_alive_ || response_.GetVersion() == "HTTP/1.0") {
                 connection_manager_.stop(self);
                 return;
             }
