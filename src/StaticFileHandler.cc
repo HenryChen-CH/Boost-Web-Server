@@ -54,5 +54,5 @@ std::string StaticFileHandler::extension(std::string file) const {
     if (n == std::string::npos) {
         return "";
     }
-    return file.substr(n);
+    return file.substr(n+1);
 }
