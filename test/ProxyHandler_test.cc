@@ -1,29 +1,47 @@
 #include "gtest/gtest.h"
-
 #include "ProxyHandler.h"
+#include "RequestHandler.h"
+#include "Request.h"
+#include "request_parser.h"
+#include "Response.h"
+#include "../nginx-configparser/config_parser.h"
 
+#include <string>
 
 class ProxyHandler_test:public ::testing::Test{
 	protected:
+		bool configParse(const std::string config) {
+			std::stringstream config_stream(config);
+			return parser.Parse(&config_stream, &parsedConfig);
+		}
+
+		RequestHandler::Status init(std::string prefix){
+			return proxy_handler.Init(prefix, parsedConfig);
+		}
+
+	    void resetConfig() {
+	        parsedConfig = NginxConfig();
+	    }
 		NginxConfigParser parser;
+		NginxConfig parsedConfig;
+		ProxyHandler proxy_handler;
 };
 
-TEST_F(ProxyHandler_test, init_test){
-	// NginxConfig config;
-	// const char* config_file="config";
-	// parser.Parse(config_file,&config);
-	// EchoHandler handler_;
-	// RequestHandler::Status status=handler_.Init("foo",config);
-	// EXPECT_EQ(handler_.uri_prefix_,"foo");
-	// EXPECT_EQ(status,0);
+
+//Init
+TEST_F(ProxyHandler_test, InitTest) {
+    configParse("host ucla.edu;\nport 80;");
+    RequestHandler::Status status = init("/proxy");
+    EXPECT_EQ(status, RequestHandler::OK);
+    resetConfig();
 }
 
-TEST_F(ProxyHandler_test, handle_request_test){
-	// Response resp;
-	// Request req;
-	// EchoHandler handler_;
-	// RequestHandler::Status status=handler_.HandleRequest(req,&resp);
-	// EXPECT_EQ(resp.response_code_,200);
-	// EXPECT_EQ(status,0);
+//Handle a Request
+TEST_F(ProxyHandler_test, HandleTest) {
+    configParse("host ucla.edu;\nport 80;");
+    init("/proxy");
+    Request request;
+    request.Parse("GET /proxy HTTP/1.1\nHost: localhost:3000\nConnection: keep-alive\nCache-Control: max-age=0");
+    Response response;
+    EXPECT_EQ(proxy_handler.HandleRequest(request, &response), RequestHandler::OK);
 }
-

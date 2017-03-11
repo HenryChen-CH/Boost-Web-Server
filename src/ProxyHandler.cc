@@ -12,7 +12,7 @@ RequestHandler::Status ProxyHandler::HandleRequest(const Request& request,
     Request r_request = request;
     //Make initial request to server
     std::string response_string = NewRequest(r_request, response);
-    Response::ResponseCode parse_status = ParseResponse(response_string, response);
+    ParseResponse(response_string, response);
 
     return RequestHandler::OK;
 }
