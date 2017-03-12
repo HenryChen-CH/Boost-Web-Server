@@ -56,7 +56,10 @@ libgtest.a: $(GTEST_DIR)
 	ar -rv libgtest.a gtest-all.o
 
 clean:
-	@find . -name \*.o -name \*.gcov -name \*.gcno -name \*.gcda -delete
+	@find . -name \*.o -delete
+	@find . -name \*.gcov -delete
+	@find . -name \*.gcno -delete
+	@find . -name \\*.gcda -delete
 	@rm -rf webserver *.d *.a
 
 docker-build:
