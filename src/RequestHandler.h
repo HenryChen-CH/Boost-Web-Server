@@ -12,6 +12,7 @@
 const std::string header_content_type_ = "Content-Type";
 const std::string NOT_FOUND_HANDLER = "NOTFOUND";
 const std::string STATUS_HANDLER = "/status";
+const std::string GZIP_COMPRESS_HANDLER = "GZIP_COMPRESS";
 
 class RequestHandler {
 public:
