@@ -1,5 +1,9 @@
 listen 3000;
 
+gzip on {
+
+}
+
 path /f StaticFileHandler {
   root ./foo/bar;
 }
