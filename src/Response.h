@@ -21,6 +21,7 @@ public:
     void SetVersion(const std::string& version);
     std::string GetVersion();
     ResponseCode GetResponseCode();
+    std::string GetBody();
     std::string ToString();
 
 private:

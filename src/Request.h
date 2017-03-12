@@ -10,7 +10,7 @@ public:
     static std::unique_ptr<Request> Parse(const std::string& raw_request);
 
     void AppendBody(std::string body);
-    std::string GetHeader(std::string name);
+    std::string GetHeader(std::string name) const;
 
     std::string raw_request() const;
     std::string method() const;

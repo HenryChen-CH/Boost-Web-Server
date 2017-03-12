@@ -46,7 +46,7 @@ void Request::AppendBody(std::string body) {
     raw_ += body;
 }
 
-std::string Request::GetHeader(std::string name) {
+std::string Request::GetHeader(std::string name) const{
     for (auto const& header: headers_) {
         if (header.first == name) {
             return header.second;

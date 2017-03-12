@@ -67,3 +67,7 @@ Response::ResponseCode Response::GetResponseCode() {
 std::string Response::GetVersion() {
     return version_;
 }
+
+std::string Response::GetBody() {
+    return body_;
+}
