@@ -6,10 +6,9 @@ RequestHandler::Status GzipCompressHandler::HandleRequest(const Request& request
         response->AddHeader("Content-Encoding", enocode_type_);
 
         // compress body
-        BOOST_LOG_TRIVIAL(info) << "body origin size: " << response->GetBody().length();
-        std::string compressed = compress(response->GetBody());
-        response->SetBody(compressed);
-        BOOST_LOG_TRIVIAL(info) << "body compressed size: " << response->GetBody().length();
+        int len = response->GetBody().length();
+        response->SetBody(compress(response->GetBody()));
+        BOOST_LOG_TRIVIAL(info) << "body compressed size: " << response->GetBody().length() << " ratio: " << response->GetBody().length()/float(len);
     } else {
         BOOST_LOG_TRIVIAL(info) << "browser does not support gzip compress";
     }
