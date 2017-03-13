@@ -31,6 +31,7 @@ private:
     boost::asio::ip::tcp::acceptor acceptor_;
     boost::asio::ip::tcp::socket socket_;
     boost::asio::signal_set signals_;
+    boost::asio::ssl::context context_;
 
     connection_manager connection_manager_;
     std::map<std::string, RequestHandler*> handler_mapping_;
