@@ -137,6 +137,10 @@ void connection::process_request() {
     if (status != RequestHandler::OK) {
         handler_mapping_[NOT_FOUND_HANDLER]->HandleRequest(*request_.get(), &response_);
     }
+    if (handler_mapping_.find(GZIP_COMPRESS_HANDLER) != handler_mapping_.end()) {
+        handler_mapping_[GZIP_COMPRESS_HANDLER]->HandleRequest(*request_.get(), &response_);
+        BOOST_LOG_TRIVIAL(info) << "response compressed";
+    }
     StatusHandler::LogRequest(request_->uri(), response_.GetResponseCode());
     BOOST_LOG_TRIVIAL(info) << "Log Into StatusHandler uri: " << request_->uri() \
                         << " response code: " <<  response_.GetResponseCode() << "\n";

@@ -34,6 +34,13 @@ bool http_server::Init(NginxConfig& config)
             }
             BOOST_LOG_TRIVIAL(info) << statement->tokens_[1] << " " << statement->tokens_[2] << "\n";
             handler_mapping_[statement->tokens_[1]] = tmp;
+        } else if (statement.get()->tokens_[0] == "gzip") {
+            if (statement.get()->tokens_[1] == "on") {
+                RequestHandler * tmp = RequestHandler::CreateByName("GzipCompressHandler");
+                tmp->Init("", *statement->child_block_.get());
+                handler_mapping_[GZIP_COMPRESS_HANDLER] = tmp;
+                BOOST_LOG_TRIVIAL(info) << "gzip on, GzipCompressHandler created under url:" << GZIP_COMPRESS_HANDLER;
+            }
         }
     }
     RequestHandler* tmp = RequestHandler::CreateByName("NotFoundHandler");

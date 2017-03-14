@@ -9,14 +9,15 @@ NGINX_FILE= nginx-configparser/config_parser.cc
 NGINX_OBJ= nginx-configparser/config_parser.o
 MARKDOWN_SOURCE = cpp-markdown/src/markdown-tokens.cpp cpp-markdown/src/markdown.cpp
 MARKDOWN_OBJ = $(patsubst %.cpp, %.o, $(MARKDOWN_SOURCE))
+ZLIB_OBJ = src/library/zlib.o
 
 TEST_FILES = $(wildcard ./test/*_test.cc)
 TESTS = $(TEST_FILES:%.cc=%)
 CPP_EXCEPT_MAIN = $(filter-out ./src/webserver_main.cc, $(CPP_FILES))
 AWS_KEY = ~/Downloads/cs130.pem
 
-webserver: $(OBJ_FILES) $(NGINX_OBJ) $(MARKDOWN_OBJ)
-	$(CXX) -o $@ $^ -static-libgcc -static-libstdc++ $(COMMON_FLAGS) -Wl,-Bstatic $(BOOST_FLAGS) 
+webserver: $(OBJ_FILES) $(NGINX_OBJ) $(MARKDOWN_OBJ) $(ZLIB_OBJ)
+	$(CXX) -o $@ $^ -static-libgcc -static-libstdc++ $(COMMON_FLAGS) -Wl,-Bstatic $(BOOST_FLAGS) -lz
 .PHONY: webserver
 
 cpp-markdown/src/%.o: cpp-markdown/src/%.cpp
@@ -24,6 +25,9 @@ cpp-markdown/src/%.o: cpp-markdown/src/%.cpp
 
 nginx-configparser/config_parser.o: $(NGINX_FILE)
 	g++ -std=c++11 -g -I ${GTEST_DIR}/include -I . -c -BOOST_ALL_DYN_LINK -o $@ $<
+
+src/library/zlib.o: src/library/zlib.cpp
+	g++ -std=c++11 -c $< -o $@
 
 src/%.o: src/%.cc
 	g++ -std=c++11 -g -I ${GTEST_DIR}/include -I . -c -BOOST_ALL_DYN_LINK -o $@ $<
@@ -52,7 +56,10 @@ libgtest.a: $(GTEST_DIR)
 	ar -rv libgtest.a gtest-all.o
 
 clean:
-	@find . -name \*.o -name \*.gcov -name \*.gcno -name \*.gcda -delete
+	@find . -name \*.o -delete
+	@find . -name \*.gcov -delete
+	@find . -name \*.gcno -delete
+	@find . -name \\*.gcda -delete
 	@rm -rf webserver *.d *.a
 
 docker-build:
