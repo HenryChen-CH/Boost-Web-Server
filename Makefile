@@ -74,7 +74,7 @@ docker-deploy: $(AWS_KEY)
 	scp -i $(AWS_KEY) ./httpserver.tar ubuntu@ec2-52-37-96-79.us-west-2.compute.amazonaws.com:~
 	rm ./httpserver.tar
 	ssh -i $(AWS_KEY) ubuntu@ec2-52-37-96-79.us-west-2.compute.amazonaws.com \
-	-t 'docker stop $$(docker ps -a -q); docker load -i httpserver.tar; docker run -d -t -p 3000:3000 httpserver; exit'
+	-t 'docker stop $$(docker ps -a -q); docker load -i httpserver.tar; docker run -d -t -p 80:80 httpserver; exit'
 .PHONY: docker-deploy
 
 print-%  : ; @echo $* = $($*)
