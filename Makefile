@@ -10,6 +10,7 @@ NGINX_OBJ= nginx-configparser/config_parser.o
 MARKDOWN_SOURCE = cpp-markdown/src/markdown-tokens.cpp cpp-markdown/src/markdown.cpp
 MARKDOWN_OBJ = $(patsubst %.cpp, %.o, $(MARKDOWN_SOURCE))
 ZLIB_OBJ = src/library/zlib.o
+ZLIB_FILE = src/library/zlib.cpp
 
 TEST_FILES = $(wildcard ./test/*_test.cc)
 TESTS = $(TEST_FILES:%.cc=%)
@@ -33,7 +34,7 @@ src/%.o: src/%.cc
 	g++ -std=c++11 -g -I ${GTEST_DIR}/include -I . -c -BOOST_ALL_DYN_LINK -o $@ $<
 
 test/%_test : test/%_test.cc libgtest.a src/%.cc
-	g++ -isystem ${GTEST_DIR}/include -I ./src -I . $(CPP_EXCEPT_MAIN) $(NGINX_FILE) ${GTEST_DIR}/src/gtest_main.cc $(word 1, $^) $(word 2, $^) $(TEST_FLAGS) $(COMMON_FLAGS) $(BOOST_FLAGS) -o $@ 
+	g++ -std=c++11 -DBOOST_LOG_DYN_LINK -isystem ${GTEST_DIR}/include -I ./src -I . -o $@ $(ZLIB_FILE) $(CPP_EXCEPT_MAIN) $(NGINX_FILE) ${GTEST_DIR}/src/gtest_main.cc $(MARKDOWN_SOURCE) $(word 1, $^) $(word 2, $^) $(TEST_FLAGS) $(COMMON_FLAGS) $(BOOST_FLAGS) -lz  
 	$@
 	rm $@
 	@mv *.gcno src/
@@ -59,7 +60,7 @@ clean:
 	@find . -name \*.o -delete
 	@find . -name \*.gcov -delete
 	@find . -name \*.gcno -delete
-	@find . -name \\*.gcda -delete
+	@find . -name \*.gcda -delete
 	@rm -rf webserver *.d *.a
 
 docker-build:
